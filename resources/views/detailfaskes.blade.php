@@ -92,7 +92,6 @@
 
         // Modal untuk Tambah Sub Master
         function toggleModalSubMaster(masterId) {
-            // Set master_id ke form
             document.getElementById('submaster_master_id').value = masterId;
             const modal = document.getElementById('modal-submaster');
             modal.classList.toggle('hidden');
@@ -102,6 +101,138 @@
         function toggleModalSubSection(subMasterId) {
             document.getElementById('subsection_sub_master_id').value = subMasterId;
             const modal = document.getElementById('modal-subsection');
+            modal.classList.toggle('hidden');
+        }
+
+        // Modal untuk Edit Tahapan
+        function toggleModalEditTahapan(tahapanId, tahapanData = null) {
+            const modal = document.getElementById('modal-edit-tahapan');
+            
+            if (tahapanData) {
+                document.getElementById('edit_tahapan_id').value = tahapanData.id;
+                document.getElementById('edit_nama_tahapan').value = tahapanData.nama;
+                document.getElementById('edit_deskripsi_tahapan').value = tahapanData.deskripsi || '';
+                document.getElementById('edit_deadline_tahapan').value = tahapanData.deadline || '';
+                document.getElementById('edit_catatan_tahapan').value = tahapanData.catatan || '';
+                document.getElementById('edit_progress_tahapan').value = tahapanData.progress || 0;
+                
+                const fileInfo = document.getElementById('current-file-tahapan');
+                if (tahapanData.file_path) {
+                    fileInfo.innerHTML = `
+                        <div class="flex items-center justify-between bg-blue-50 p-3 rounded-lg border border-blue-200">
+                            <div class="flex items-center">
+                                <i class="fas fa-paperclip text-blue-600 mr-3"></i>
+                                <div>
+                                    <div class="text-sm font-medium text-gray-800">${tahapanData.file_original_name}</div>
+                                    <div class="text-xs text-gray-500 mt-1">
+                                        <i class="fas fa-hdd mr-1"></i>${tahapanData.file_size}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex space-x-2">
+                                <a href="/download/tahapan/${tahapanData.id}" 
+                                   class="px-3 py-1 bg-blue-600 text-white rounded text-xs flex items-center hover:bg-blue-700">
+                                    <i class="fas fa-download mr-1"></i> Download
+                                </a>
+                                <a href="/preview/tahapan/${tahapanData.id}" 
+                                   target="_blank"
+                                   class="px-3 py-1 bg-green-600 text-white rounded text-xs flex items-center hover:bg-green-700">
+                                    <i class="fas fa-eye mr-1"></i> Preview
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    fileInfo.innerHTML = '<p class="text-gray-500 text-sm">Tidak ada file</p>';
+                }
+            }
+            
+            modal.classList.toggle('hidden');
+        }
+
+        // Modal untuk Edit SubMaster
+        function toggleModalEditSubMaster(subMasterId, subMasterData = null) {
+            const modal = document.getElementById('modal-edit-submaster');
+            
+            if (subMasterData) {
+                document.getElementById('edit_submaster_id').value = subMasterData.id;
+                document.getElementById('edit_nama_submaster').value = subMasterData.nama;
+                document.getElementById('edit_deadline_submaster').value = subMasterData.deadline || '';
+                document.getElementById('edit_catatan_submaster').value = subMasterData.catatan || '';
+                document.getElementById('edit_progress_submaster').value = subMasterData.progress || 0;
+                
+                const fileInfo = document.getElementById('current-file-submaster');
+                if (subMasterData.file_path) {
+                    fileInfo.innerHTML = `
+                        <div class="flex items-center justify-between bg-green-50 p-2 rounded border border-green-200">
+                            <div class="flex items-center">
+                                <i class="fas fa-paperclip text-green-600 mr-2"></i>
+                                <div>
+                                    <div class="text-xs font-medium text-gray-800">${subMasterData.file_original_name}</div>
+                                    <div class="text-xs text-gray-500">${subMasterData.file_size}</div>
+                                </div>
+                            </div>
+                            <div class="flex space-x-2">
+                                <a href="/download/submaster/${subMasterData.id}" 
+                                   class="px-2 py-1 bg-green-600 text-white rounded text-xs flex items-center hover:bg-green-700">
+                                    <i class="fas fa-download mr-1"></i> Download
+                                </a>
+                                <a href="/preview/submaster/${subMasterData.id}" 
+                                   target="_blank"
+                                   class="px-2 py-1 bg-blue-600 text-white rounded text-xs flex items-center hover:bg-blue-700">
+                                    <i class="fas fa-eye mr-1"></i> Preview
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    fileInfo.innerHTML = '<p class="text-gray-500 text-xs">Tidak ada file</p>';
+                }
+            }
+            
+            modal.classList.toggle('hidden');
+        }
+
+        // Modal untuk Edit SubSection
+        function toggleModalEditSubSection(subSectionId, subSectionData = null) {
+            const modal = document.getElementById('modal-edit-subsection');
+            
+            if (subSectionData) {
+                document.getElementById('edit_subsection_id').value = subSectionData.id;
+                document.getElementById('edit_nama_subsection').value = subSectionData.nama;
+                document.getElementById('edit_deadline_subsection').value = subSectionData.deadline || '';
+                document.getElementById('edit_catatan_subsection').value = subSectionData.catatan || '';
+                document.getElementById('edit_progress_subsection').value = subSectionData.progress || 0;
+                
+                const fileInfo = document.getElementById('current-file-subsection');
+                if (subSectionData.file_path) {
+                    fileInfo.innerHTML = `
+                        <div class="flex items-center justify-between bg-purple-50 p-2 rounded border border-purple-200">
+                            <div class="flex items-center">
+                                <i class="fas fa-paperclip text-purple-600 mr-2"></i>
+                                <div>
+                                    <div class="text-xs font-medium text-gray-800">${subSectionData.file_original_name}</div>
+                                    <div class="text-xs text-gray-500">${subSectionData.file_size}</div>
+                                </div>
+                            </div>
+                            <div class="flex space-x-2">
+                                <a href="/download/subsection/${subSectionData.id}" 
+                                   class="px-2 py-1 bg-purple-600 text-white rounded text-xs flex items-center hover:bg-purple-700">
+                                    <i class="fas fa-download mr-1"></i> Download
+                                </a>
+                                <a href="/preview/subsection/${subSectionData.id}" 
+                                   target="_blank"
+                                   class="px-2 py-1 bg-blue-600 text-white rounded text-xs flex items-center hover:bg-blue-700">
+                                    <i class="fas fa-eye mr-1"></i> Preview
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    fileInfo.innerHTML = '<p class="text-gray-500 text-xs">Tidak ada file</p>';
+                }
+            }
+            
             modal.classList.toggle('hidden');
         }
 
@@ -120,6 +251,25 @@
                     }
                 });
             }
+
+            // Set form actions for edit forms
+            const editTahapanForm = document.getElementById('form-edit-tahapan');
+            editTahapanForm.addEventListener('submit', function(e) {
+                const id = document.getElementById('edit_tahapan_id').value;
+                this.action = `/tahapan/${id}/update`;
+            });
+
+            const editSubMasterForm = document.getElementById('form-edit-submaster');
+            editSubMasterForm.addEventListener('submit', function(e) {
+                const id = document.getElementById('edit_submaster_id').value;
+                this.action = `/submaster/${id}/update`;
+            });
+
+            const editSubSectionForm = document.getElementById('form-edit-subsection');
+            editSubSectionForm.addEventListener('submit', function(e) {
+                const id = document.getElementById('edit_subsection_id').value;
+                this.action = `/subsection/${id}/update`;
+            });
         });
     </script>
 </head>
@@ -269,7 +419,7 @@
                                                    class="px-3 py-2 bg-blue-600 text-white rounded text-sm flex items-center hover:bg-blue-700 transition duration-300">
                                                     <i class="fas fa-download mr-2"></i> Download
                                                 </a>
-                                                <a href="{{ asset('storage/' . $tahap->file_path) }}" 
+                                                <a href="{{ route('preview.file', ['type' => 'tahapan', 'id' => $tahap->id]) }}" 
                                                    target="_blank" 
                                                    class="px-3 py-2 bg-green-600 text-white rounded text-sm flex items-center hover:bg-green-700 transition duration-300">
                                                     <i class="fas fa-eye mr-2"></i> Preview
@@ -285,15 +435,31 @@
                                             class="px-3 py-1 bg-blue-600 text-white rounded text-sm flex items-center hover:bg-blue-700">
                                         <i class="fas fa-plus mr-1"></i> Sub
                                     </button>
-                                    <button class="px-3 py-1 bg-yellow-500 text-white rounded text-sm flex items-center">
-                                        <i class="fas fa-sticky-note mr-1"></i> Catatan
+                                    
+                                    <!-- TOMBOL EDIT TAHAPAN -->
+                                    <button onclick="toggleModalEditTahapan({{ $tahap->id }}, { 
+                                        id: {{ $tahap->id }}, 
+                                        nama: '{{ addslashes($tahap->nama) }}', 
+                                        deskripsi: '{{ addslashes($tahap->deskripsi ?? '') }}', 
+                                        deadline: '{{ $tahap->deadline ? $tahap->deadline->format('Y-m-d') : '' }}', 
+                                        catatan: '{{ addslashes($tahap->catatan ?? '') }}', 
+                                        progress: {{ $tahap->progress }},
+                                        file_path: '{{ $tahap->file_path }}',
+                                        file_original_name: '{{ addslashes($tahap->file_original_name ?? '') }}',
+                                        file_size: '{{ addslashes($tahap->file_size ?? '') }}'
+                                    })" class="px-3 py-1 bg-yellow-500 text-white rounded text-sm flex items-center hover:bg-yellow-600">
+                                        <i class="fas fa-edit mr-1"></i> Edit
                                     </button>
-                                    <button class="px-3 py-1 bg-purple-600 text-white rounded text-sm flex items-center">
-                                        <i class="fas fa-calendar-alt mr-1"></i> Deadline
-                                    </button>
-                                    <button class="px-3 py-1 bg-green-600 text-white rounded text-sm flex items-center">
-                                        <i class="fas fa-check mr-1"></i> Submit
-                                    </button>
+                                    
+                                    <!-- TOMBOL HAPUS TAHAPAN -->
+                                    <form action="{{ route('tahapan.destroy', $tahap->id) }}" method="POST" class="inline">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" 
+                                                class="px-3 py-1 bg-red-600 text-white rounded text-sm flex items-center hover:bg-red-700 w-full"
+                                                onclick="return confirm('Yakin hapus tahapan {{ $tahap->nama }}?')">
+                                            <i class="fas fa-trash mr-1"></i> Hapus
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
 
@@ -347,10 +513,18 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <a href="{{ route('download.file', ['type' => 'submaster', 'id' => $submaster->id]) }}" 
-                                                       class="px-2 py-1 bg-green-600 text-white rounded text-xs flex items-center hover:bg-green-700">
-                                                        <i class="fas fa-download mr-1"></i> Download
-                                                    </a>
+                                                    <div class="flex space-x-2">
+                                                        <a href="{{ route('download.file', ['type' => 'submaster', 'id' => $submaster->id]) }}" 
+                                                           class="px-2 py-1 bg-green-600 text-white rounded text-xs flex items-center hover:bg-green-700">
+                                                            <i class="fas fa-download mr-1"></i> Download
+                                                        </a>
+                                                        <!-- TOMBOL PREVIEW SUBMASTER -->
+                                                        <a href="{{ route('preview.file', ['type' => 'submaster', 'id' => $submaster->id]) }}" 
+                                                           target="_blank" 
+                                                           class="px-2 py-1 bg-blue-600 text-white rounded text-xs flex items-center hover:bg-blue-700">
+                                                            <i class="fas fa-eye mr-1"></i> Preview
+                                                        </a>
+                                                    </div>
                                                 </div>
                                             </div>
                                             @endif
@@ -361,15 +535,30 @@
                                                     class="px-2 py-1 bg-blue-500 text-white rounded text-xs flex items-center hover:bg-blue-600">
                                                 <i class="fas fa-plus mr-1"></i> Sub Section
                                             </button>
-                                            <button class="px-2 py-1 bg-yellow-500 text-white rounded text-xs flex items-center">
-                                                <i class="fas fa-sticky-note mr-1"></i> Catatan
+                                            
+                                            <!-- TOMBOL EDIT SUBMASTER -->
+                                            <button onclick="toggleModalEditSubMaster({{ $submaster->id }}, { 
+                                                id: {{ $submaster->id }}, 
+                                                nama: '{{ addslashes($submaster->nama) }}', 
+                                                deadline: '{{ $submaster->deadline ? $submaster->deadline->format('Y-m-d') : '' }}', 
+                                                catatan: '{{ addslashes($submaster->catatan ?? '') }}', 
+                                                progress: {{ $submaster->progress }},
+                                                file_path: '{{ $submaster->file_path }}',
+                                                file_original_name: '{{ addslashes($submaster->file_original_name ?? '') }}',
+                                                file_size: '{{ addslashes($submaster->file_size ?? '') }}'
+                                            })" class="px-2 py-1 bg-yellow-500 text-white rounded text-xs flex items-center hover:bg-yellow-600">
+                                                <i class="fas fa-edit mr-1"></i> Edit
                                             </button>
-                                            <button class="px-2 py-1 bg-purple-600 text-white rounded text-xs flex items-center">
-                                                <i class="fas fa-calendar-alt mr-1"></i> Deadline
-                                            </button>
-                                            <button class="px-2 py-1 bg-green-600 text-white rounded text-xs flex items-center">
-                                                <i class="fas fa-check mr-1"></i> Submit
-                                            </button>
+                                            
+                                            <!-- TOMBOL HAPUS SUBMASTER -->
+                                            <form action="{{ route('submaster.destroy', $submaster->id) }}" method="POST" class="inline">
+                                                @csrf @method('DELETE')
+                                                <button type="submit" 
+                                                        class="px-2 py-1 bg-red-600 text-white rounded text-xs flex items-center hover:bg-red-700 w-full"
+                                                        onclick="return confirm('Yakin hapus submaster {{ $submaster->nama }}?')">
+                                                    <i class="fas fa-trash mr-1"></i> Hapus
+                                                </button>
+                                            </form>
                                         </div>
                                     </div>
 
@@ -423,25 +612,47 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <a href="{{ route('download.file', ['type' => 'subsection', 'id' => $subsection->id]) }}" 
-                                                               class="px-2 py-1 bg-purple-600 text-white rounded text-xs flex items-center hover:bg-purple-700">
-                                                                <i class="fas fa-download mr-1"></i> Download
-                                                            </a>
+                                                            <div class="flex space-x-2">
+                                                                <a href="{{ route('download.file', ['type' => 'subsection', 'id' => $subsection->id]) }}" 
+                                                                   class="px-2 py-1 bg-purple-600 text-white rounded text-xs flex items-center hover:bg-purple-700">
+                                                                    <i class="fas fa-download mr-1"></i> Download
+                                                                </a>
+                                                                <!-- TOMBOL PREVIEW SUBSECTION -->
+                                                                <a href="{{ route('preview.file', ['type' => 'subsection', 'id' => $subsection->id]) }}" 
+                                                                   target="_blank" 
+                                                                   class="px-2 py-1 bg-blue-600 text-white rounded text-xs flex items-center hover:bg-blue-700">
+                                                                    <i class="fas fa-eye mr-1"></i> Preview
+                                                                </a>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     @endif
                                                 </div>
 
                                                 <div class="flex flex-col space-y-1 ml-4">
-                                                    <button class="px-1 py-0.5 bg-yellow-500 text-white rounded text-xs flex items-center">
-                                                        <i class="fas fa-sticky-note mr-0.5"></i> Note
+                                                    <!-- TOMBOL EDIT SUBSECTION -->
+                                                    <button onclick="toggleModalEditSubSection({{ $subsection->id }}, { 
+                                                        id: {{ $subsection->id }}, 
+                                                        nama: '{{ addslashes($subsection->nama) }}', 
+                                                        deadline: '{{ $subsection->deadline ? $subsection->deadline->format('Y-m-d') : '' }}', 
+                                                        catatan: '{{ addslashes($subsection->catatan ?? '') }}', 
+                                                        progress: {{ $subsection->progress }},
+                                                        file_path: '{{ $subsection->file_path }}',
+                                                        file_original_name: '{{ addslashes($subsection->file_original_name ?? '') }}',
+                                                        file_size: '{{ addslashes($subsection->file_size ?? '') }}'
+                                                    })" class="px-1 py-0.5 bg-yellow-500 text-white rounded text-xs flex items-center hover:bg-yellow-600">
+                                                        <i class="fas fa-edit mr-0.5"></i> Edit
                                                     </button>
-                                                    <button class="px-1 py-0.5 bg-purple-600 text-white rounded text-xs flex items-center">
-                                                        <i class="fas fa-calendar-alt mr-0.5"></i> Due
-                                                    </button>
-                                                    <button class="px-1 py-0.5 bg-green-600 text-white rounded text-xs flex items-center">
-                                                        <i class="fas fa-check mr-0.5"></i> Done
-                                                    </button>
+                                                    
+                                                    <!-- TOMBOL HAPUS SUBSECTION -->
+                                                    <form action="{{ route('subsection.destroy', $subsection->id) }}" method="POST" class="inline">
+                                                        @csrf @method('DELETE')
+                                                        <button type="submit" 
+                                                                class="px-1 py-0.5 bg-red-600 text-white rounded text-xs flex items-center hover:bg-red-700 w-full"
+                                                                onclick="return confirm('Yakin hapus sub-section {{ $subsection->nama }}?')">
+                                                            <i class="fas fa-trash mr-0.5"></i> Hapus
+                                                        </button>
+                                                    </form>
                                                 </div>
                                             </div>
                                         </div>
@@ -573,7 +784,7 @@
         </div>
     </div>
 
-<!-- Modal Popup untuk Tambah Tahapan - UPDATE INI -->
+<!-- Modal Popup untuk Tambah Tahapan -->
 <div id="modal-tahapan" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50 p-4">
     <div class="bg-white rounded-lg shadow-lg max-w-xl w-full max-h-[90vh] flex flex-col">
         <div class="flex justify-between items-center p-6 border-b border-gray-200 flex-shrink-0">
@@ -639,7 +850,7 @@
     </div>
 </div>
 
-<!-- Modal Popup untuk Tambah Sub Master - UPDATE INI -->
+<!-- Modal Popup untuk Tambah Sub Master -->
 <div id="modal-submaster" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50 p-4">
     <div class="bg-white rounded-lg shadow-lg max-w-xl w-full max-h-[90vh] flex flex-col">
         <div class="flex justify-between items-center p-6 border-b border-gray-200 flex-shrink-0">
@@ -703,7 +914,7 @@
     </div>
 </div>
 
-<!-- Modal Popup untuk Tambah Sub Section - UPDATE INI -->
+<!-- Modal Popup untuk Tambah Sub Section -->
 <div id="modal-subsection" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50 p-4">
     <div class="bg-white rounded-lg shadow-lg max-w-md w-full max-h-[90vh] flex flex-col">
         <div class="flex justify-between items-center p-6 border-b border-gray-200 flex-shrink-0">
@@ -760,6 +971,174 @@
                     </button>
                     <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
                         Simpan Sub-section
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Edit untuk Tahapan -->
+<div id="modal-edit-tahapan" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50 p-4">
+    <div class="bg-white rounded-lg shadow-lg max-w-xl w-full max-h-[90vh] flex flex-col">
+        <div class="flex justify-between items-center p-6 border-b border-gray-200 flex-shrink-0">
+            <h1 class="text-xl font-bold">Edit Tahapan</h1>
+            <button onclick="toggleModalEditTahapan()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+        </div>
+        
+        <div class="p-6 overflow-y-auto flex-1">
+            <form id="form-edit-tahapan" action="" method="POST" enctype="multipart/form-data">
+                @csrf @method('PUT')
+                <input type="hidden" name="id" id="edit_tahapan_id">
+
+                <label class="block mb-2">Nama Tahapan</label>
+                <input type="text" name="nama" id="edit_nama_tahapan" class="w-full border p-2 rounded mb-4" required>
+
+                <label class="block mb-2">Deskripsi</label>
+                <textarea name="deskripsi" id="edit_deskripsi_tahapan" class="w-full border p-2 rounded mb-4"></textarea>
+
+                <label class="block mb-2">Deadline</label>
+                <input type="date" name="deadline" id="edit_deadline_tahapan" class="w-full border p-2 rounded mb-4">
+
+                <label class="block mb-2">Catatan</label>
+                <textarea name="catatan" id="edit_catatan_tahapan" class="w-full border p-2 rounded mb-4"></textarea>
+
+                <label class="block mb-2">Progress (%)</label>
+                <input type="number" name="progress" id="edit_progress_tahapan" min="0" max="100" class="w-full border p-2 rounded mb-4">
+
+                <!-- Current File Info -->
+                <div class="mb-4">
+                    <label class="block mb-2 font-medium text-gray-700">File Saat Ini</label>
+                    <div id="current-file-tahapan" class="text-gray-500 text-sm">
+                        <!-- File info akan diisi oleh JavaScript -->
+                    </div>
+                </div>
+
+                <!-- New File Upload -->
+                <div class="mb-4">
+                    <label class="block mb-2 font-medium text-gray-700">Upload File Baru (opsional)</label>
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-blue-400 transition duration-300">
+                        <input type="file" name="file" class="w-full">
+                        <p class="text-xs text-gray-400 mt-1">PDF, DOC, Excel, PPT, JPG, PNG, ZIP, RAR (max: 10MB)</p>
+                    </div>
+                </div>
+
+                <div class="flex justify-end space-x-2 pt-4 border-t border-gray-200 mt-4">
+                    <button type="button" onclick="toggleModalEditTahapan()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">
+                        Batal
+                    </button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                        Update Tahapan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Edit untuk SubMaster -->
+<div id="modal-edit-submaster" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50 p-4">
+    <div class="bg-white rounded-lg shadow-lg max-w-md w-full max-h-[90vh] flex flex-col">
+        <div class="flex justify-between items-center p-6 border-b border-gray-200 flex-shrink-0">
+            <h1 class="text-xl font-bold">Edit Sub-Master</h1>
+            <button onclick="toggleModalEditSubMaster()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+        </div>
+        
+        <div class="p-6 overflow-y-auto flex-1">
+            <form id="form-edit-submaster" action="" method="POST" enctype="multipart/form-data">
+                @csrf @method('PUT')
+                <input type="hidden" name="id" id="edit_submaster_id">
+
+                <label class="block mb-2">Nama Sub-Master</label>
+                <input type="text" name="nama" id="edit_nama_submaster" class="w-full border p-2 rounded mb-4" required>
+
+                <label class="block mb-2">Deadline</label>
+                <input type="date" name="deadline" id="edit_deadline_submaster" class="w-full border p-2 rounded mb-4">
+
+                <label class="block mb-2">Catatan</label>
+                <textarea name="catatan" id="edit_catatan_submaster" class="w-full border p-2 rounded mb-4" rows="3"></textarea>
+
+                <label class="block mb-2">Progress (%)</label>
+                <input type="number" name="progress" id="edit_progress_submaster" min="0" max="100" class="w-full border p-2 rounded mb-4">
+
+                <!-- Current File Info -->
+                <div class="mb-4">
+                    <label class="block mb-2 font-medium text-gray-700">File Saat Ini</label>
+                    <div id="current-file-submaster" class="text-gray-500 text-sm">
+                        <!-- File info akan diisi oleh JavaScript -->
+                    </div>
+                </div>
+
+                <!-- New File Upload -->
+                <div class="mb-4">
+                    <label class="block mb-2 font-medium text-gray-700">Upload File Baru (opsional)</label>
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-blue-400 transition duration-300">
+                        <input type="file" name="file" class="w-full">
+                        <p class="text-xs text-gray-400 mt-1">PDF, DOC, Excel, PPT, JPG, PNG, ZIP, RAR (max: 10MB)</p>
+                    </div>
+                </div>
+
+                <div class="flex justify-end space-x-2 pt-4 border-t border-gray-200 mt-4">
+                    <button type="button" onclick="toggleModalEditSubMaster()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">
+                        Batal
+                    </button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                        Update Sub-Master
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Edit untuk SubSection -->
+<div id="modal-edit-subsection" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50 p-4">
+    <div class="bg-white rounded-lg shadow-lg max-w-md w-full max-h-[90vh] flex flex-col">
+        <div class="flex justify-between items-center p-6 border-b border-gray-200 flex-shrink-0">
+            <h1 class="text-xl font-bold">Edit Sub-Section</h1>
+            <button onclick="toggleModalEditSubSection()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+        </div>
+        
+        <div class="p-6 overflow-y-auto flex-1">
+            <form id="form-edit-subsection" action="" method="POST" enctype="multipart/form-data">
+                @csrf @method('PUT')
+                <input type="hidden" name="id" id="edit_subsection_id">
+
+                <label class="block mb-2">Nama Sub-Section</label>
+                <input type="text" name="nama" id="edit_nama_subsection" class="w-full border p-2 rounded mb-4" required>
+
+                <label class="block mb-2">Deadline</label>
+                <input type="date" name="deadline" id="edit_deadline_subsection" class="w-full border p-2 rounded mb-4">
+
+                <label class="block mb-2">Catatan</label>
+                <textarea name="catatan" id="edit_catatan_subsection" class="w-full border p-2 rounded mb-4" rows="3"></textarea>
+
+                <label class="block mb-2">Progress (%)</label>
+                <input type="number" name="progress" id="edit_progress_subsection" min="0" max="100" class="w-full border p-2 rounded mb-4">
+
+                <!-- Current File Info -->
+                <div class="mb-4">
+                    <label class="block mb-2 font-medium text-gray-700">File Saat Ini</label>
+                    <div id="current-file-subsection" class="text-gray-500 text-sm">
+                        <!-- File info akan diisi oleh JavaScript -->
+                    </div>
+                </div>
+
+                <!-- New File Upload -->
+                <div class="mb-4">
+                    <label class="block mb-2 font-medium text-gray-700">Upload File Baru (opsional)</label>
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-blue-400 transition duration-300">
+                        <input type="file" name="file" class="w-full">
+                        <p class="text-xs text-gray-400 mt-1">PDF, DOC, Excel, PPT, JPG, PNG, ZIP, RAR (max: 10MB)</p>
+                    </div>
+                </div>
+
+                <div class="flex justify-end space-x-2 pt-4 border-t border-gray-200 mt-4">
+                    <button type="button" onclick="toggleModalEditSubSection()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">
+                        Batal
+                    </button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                        Update Sub-Section
                     </button>
                 </div>
             </form>

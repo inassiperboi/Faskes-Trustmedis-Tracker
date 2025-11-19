@@ -1,69 +1,68 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\FaskesController;
+use App\Http\Controllers\TahapanController;
 use App\Http\Controllers\SubMasterController;
 use App\Http\Controllers\SubSectionController;
-use Illuminate\Support\Facades\Storage;
-// use App\Http\Controllers\MasterController;
-// use App\Http\Controllers\SectionController;
 
-// Dashboard → tampilkan daftar faskes
+// ==================== ROUTE DASHBOARD ====================
 Route::get('/', [FaskesController::class, 'index'])->name('dashboard');
 
-// CRUD Faskes
+// ==================== ROUTE FASKES ====================
 Route::resource('faskes', FaskesController::class);
-Route::get('/faskes/{id}/detail', [FaskesController::class, 'detail'])->name('faskes.detail');
-use App\Http\Controllers\TahapanController;
 
-// Form tambah tahapan
-Route::get('/faskes/{id}/tahapan/create', [TahapanController::class, 'create'])
-    ->name('tahapan.create');
+// ==================== ROUTE TAHAPAN ====================
+Route::prefix('faskes/{faskes_id}')->group(function () {
+    Route::get('/tahapan/create', [TahapanController::class, 'create'])->name('tahapan.create');
+    Route::post('/tahapan/store', [TahapanController::class, 'store'])->name('tahapan.store');
+});
 
-// Simpan tahapan
-Route::post('/faskes/{id}/tahapan/store', [TahapanController::class, 'store'])
-    ->name('tahapan.store');
+// EDIT & UPDATE TAHAPAN
+Route::get('/tahapan/{id}/edit', [TahapanController::class, 'edit'])->name('tahapan.edit');
+Route::put('/tahapan/{id}/update', [TahapanController::class, 'update'])->name('tahapan.update');
+Route::delete('/tahapan/{id}/destroy', [TahapanController::class, 'destroy'])->name('tahapan.destroy'); // INI YANG DITAMBAHKAN
 
-// SubMaster Routes - SIMPAN SUB MASTER
+// ==================== ROUTE SUBMASTER ====================
 Route::post('/submaster/store', [SubMasterController::class, 'store'])->name('submaster.store');
+Route::get('/submaster/{id}/edit', [SubMasterController::class, 'edit'])->name('submaster.edit');
+Route::put('/submaster/{id}/update', [SubMasterController::class, 'update'])->name('submaster.update');
+Route::delete('/submaster/{id}/destroy', [SubMasterController::class, 'destroy'])->name('submaster.destroy');
 
-// SubSection Routes
+// ==================== ROUTE SUBSECTION ====================
 Route::post('/subsection/store', [SubSectionController::class, 'store'])->name('subsection.store');
+Route::get('/subsection/{id}/edit', [SubSectionController::class, 'edit'])->name('subsection.edit');
+Route::put('/subsection/{id}/update', [SubSectionController::class, 'update'])->name('subsection.update');
+Route::delete('/subsection/{id}/destroy', [SubSectionController::class, 'destroy'])->name('subsection.destroy');
 
-// Route untuk download file
+// ==================== ROUTE FILE HANDLING ====================
 Route::get('/download/{type}/{id}', function ($type, $id) {
-    if ($type === 'tahapan') {
-        $item = \App\Models\Master::findOrFail($id);
-    } elseif ($type === 'submaster') {
-        $item = \App\Models\SubMaster::findOrFail($id);
-    } elseif ($type === 'subsection') {
-        $item = \App\Models\SubSection::findOrFail($id);
-    } else {
-        abort(404);
+    $model = match($type) {
+        'tahapan' => \App\Models\Master::findOrFail($id),
+        'submaster' => \App\Models\SubMaster::findOrFail($id),
+        'subsection' => \App\Models\SubSection::findOrFail($id),
+        default => abort(404, 'Tipe file tidak valid')
+    };
+    
+    if (!$model->file_path || !Storage::disk('public')->exists($model->file_path)) {
+        return back()->with('error', 'File tidak ditemukan.');
     }
     
-    if ($item->file_path && Storage::disk('public')->exists($item->file_path)) {
-        return Storage::disk('public')->download($item->file_path, $item->file_original_name);
-    }
-    
-    return back()->with('error', 'File tidak ditemukan.');
+    return Storage::disk('public')->download($model->file_path, $model->file_original_name);
 })->name('download.file');
 
-// Route untuk preview file
 Route::get('/preview/{type}/{id}', function ($type, $id) {
-    if ($type === 'tahapan') {
-        $item = \App\Models\Master::findOrFail($id);
-    } elseif ($type === 'submaster') {
-        $item = \App\Models\SubMaster::findOrFail($id);
-    } elseif ($type === 'subsection') {
-        $item = \App\Models\SubSection::findOrFail($id);
-    } else {
-        abort(404);
+    $model = match($type) {
+        'tahapan' => \App\Models\Master::findOrFail($id),
+        'submaster' => \App\Models\SubMaster::findOrFail($id),
+        'subsection' => \App\Models\SubSection::findOrFail($id),
+        default => abort(404, 'Tipe file tidak valid')
+    };
+    
+    if (!$model->file_path || !Storage::disk('public')->exists($model->file_path)) {
+        abort(404, 'File tidak ditemukan');
     }
     
-    if ($item->file_path && Storage::disk('public')->exists($item->file_path)) {
-        return response()->file(storage_path('app/public/' . $item->file_path));
-    }
-    
-    abort(404);
+    return response()->file(storage_path('app/public/' . $model->file_path));
 })->name('preview.file');

@@ -13,7 +13,7 @@ class SubMasterController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'master_id' => 'required|exists:masters,id',
+            'master_id' => 'required|exists:master,id', // PERBAIKAN: masters → master
             'nama' => 'required|max:255',
             'deadline' => 'nullable|date',
             'catatan' => 'nullable',
@@ -51,6 +51,74 @@ class SubMasterController extends Controller
         return redirect()->back()->with('success', 'Sub tahapan berhasil ditambahkan!');
     }
 
+    // EDIT SUB MASTER
+    public function edit($id)
+    {
+        $submaster = SubMaster::findOrFail($id);
+        return view('submaster.edit', compact('submaster'));
+    }
+
+    // UPDATE SUB MASTER
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'nama' => 'required|max:255',
+            'deadline' => 'nullable|date',
+            'catatan' => 'nullable',
+            'progress' => 'nullable|integer|min:0|max:100',
+            'file' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,jpg,jpeg,png,zip,rar|max:10240',
+        ]);
+
+        $submaster = SubMaster::findOrFail($id);
+
+        $data = [
+            'nama' => $request->nama,
+            'deadline' => $request->deadline,
+            'catatan' => $request->catatan,
+            'progress' => $request->progress ?? 0,
+            'completed' => $request->progress == 100 ? 1 : 0, // PERBAIKAN: true → 1, false → 0
+        ];
+
+        // Handle file upload
+        if ($request->hasFile('file')) {
+            // Hapus file lama
+            if ($submaster->file_path && Storage::disk('public')->exists($submaster->file_path)) {
+                Storage::disk('public')->delete($submaster->file_path);
+            }
+
+            $file = $request->file('file');
+            $fileOriginalName = $file->getClientOriginalName();
+            $fileName = time() . '_' . uniqid() . '_' . $fileOriginalName;
+            $filePath = $file->storeAs('uploads/submaster', $fileName, 'public');
+            $fileSize = $this->formatFileSize($file->getSize());
+
+            $data['file_path'] = $filePath;
+            $data['file_name'] = $fileName;
+            $data['file_original_name'] = $fileOriginalName;
+            $data['file_size'] = $fileSize;
+        }
+
+        $submaster->update($data);
+
+        return redirect()->back()->with('success', 'Sub Master berhasil diupdate!');
+    }
+
+    // HAPUS SUB MASTER
+    public function destroy($id)
+    {
+        $submaster = SubMaster::findOrFail($id);
+
+        // Hapus file jika ada
+        if ($submaster->file_path && Storage::disk('public')->exists($submaster->file_path)) {
+            Storage::disk('public')->delete($submaster->file_path);
+        }
+
+        $submaster->delete();
+
+        return redirect()->back()->with('success', 'Sub Master berhasil dihapus!');
+    }
+
+    // Helper function untuk format file size
     private function formatFileSize($bytes)
     {
         if ($bytes >= 1073741824) {

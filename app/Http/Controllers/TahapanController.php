@@ -25,7 +25,7 @@ class TahapanController extends Controller
             'deadline' => 'nullable|date',
             'catatan' => 'nullable',
             'progress' => 'nullable|integer|min:0|max:100',
-            'file' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,jpg,jpeg,png,zip,rar|max:10240', // 10MB
+            'file' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,jpg,jpeg,png,zip,rar|max:10240',
         ]);
 
         $filePath = null;
@@ -58,6 +58,78 @@ class TahapanController extends Controller
 
         return redirect()->route('faskes.show', $faskes_id)
                          ->with('success', 'Tahapan berhasil ditambahkan!');
+    }
+
+    // EDIT TAHAPAN
+    public function edit($id)
+    {
+        $tahapan = Master::findOrFail($id);
+        return view('tahapan.edit', compact('tahapan'));
+    }
+
+    // UPDATE TAHAPAN
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'nama' => 'required|max:255',
+            'deskripsi' => 'nullable',
+            'deadline' => 'nullable|date',
+            'catatan' => 'nullable',
+            'progress' => 'nullable|integer|min:0|max:100',
+            'file' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,jpg,jpeg,png,zip,rar|max:10240',
+        ]);
+
+        $tahapan = Master::findOrFail($id);
+
+        $data = [
+            'nama' => $request->nama,
+            'deskripsi' => $request->deskripsi,
+            'deadline' => $request->deadline,
+            'catatan' => $request->catatan,
+            'progress' => $request->progress ?? 0,
+            'completed' => $request->progress == 100 ? 1 : 0,
+        ];
+
+        // Handle file upload jika ada file baru
+        if ($request->hasFile('file')) {
+            // Hapus file lama jika ada
+            if ($tahapan->file_path && Storage::disk('public')->exists($tahapan->file_path)) {
+                Storage::disk('public')->delete($tahapan->file_path);
+            }
+
+            $file = $request->file('file');
+            $fileOriginalName = $file->getClientOriginalName();
+            $fileName = time() . '_' . uniqid() . '_' . $fileOriginalName;
+            $filePath = $file->storeAs('uploads/tahapan', $fileName, 'public');
+            $fileSize = $this->formatFileSize($file->getSize());
+
+            $data['file_path'] = $filePath;
+            $data['file_name'] = $fileName;
+            $data['file_original_name'] = $fileOriginalName;
+            $data['file_size'] = $fileSize;
+        }
+
+        $tahapan->update($data);
+
+        return redirect()->route('faskes.show', $tahapan->faskes_id)
+                         ->with('success', 'Tahapan berhasil diupdate!');
+    }
+
+    // HAPUS TAHAPAN
+    public function destroy($id)
+    {
+        $tahapan = Master::findOrFail($id);
+        $faskes_id = $tahapan->faskes_id;
+
+        // Hapus file jika ada
+        if ($tahapan->file_path && Storage::disk('public')->exists($tahapan->file_path)) {
+            Storage::disk('public')->delete($tahapan->file_path);
+        }
+
+        $tahapan->delete();
+
+        return redirect()->route('faskes.show', $faskes_id)
+                         ->with('success', 'Tahapan berhasil dihapus!');
     }
 
     // Helper function untuk format file size
