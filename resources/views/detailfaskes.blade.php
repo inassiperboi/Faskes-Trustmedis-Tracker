@@ -20,13 +20,13 @@
             transition: width 0.3s ease;
         }
         .calendar-day {
-            width: 32px;
-            height: 32px;
+            width: 28px;
+            height: 28px;
             display: flex;
             align-items: center;
             justify-content: center;
             border-radius: 50%;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             cursor: pointer;
         }
         .calendar-day.today {
@@ -68,6 +68,18 @@
         .badge-subsection {
             background-color: #dcfce7;
             color: #166534;
+        }
+        
+        /* Tambahan untuk responsivitas kalender pada mobile */
+        @media (max-width: 640px) {
+            .calendar-day {
+                width: 28px;
+                height: 28px;
+                font-size: 0.7rem;
+            }
+            .grid-cols-7 {
+                gap: 0.5rem;
+            }
         }
     </style>
 
@@ -139,12 +151,12 @@
         </div>
     </header>
 
-    <!-- Container utama -->
-    <div class="container mx-auto px-8">
-        <div class="grid grid-cols-1 xl:grid-cols-4 gap-8">
+    <!-- Container untuk memberikan jarak lebih dari pinggir body -->
+    <div class="container mx-auto px-4 md:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-8">
 
             <!-- LEFT: Detail Faskes & Tahapan -->
-            <div class="xl:col-span-3 space-y-6">
+            <div class="md:col-span-3 space-y-6">
 
                 {{-- Breadcrumb & Kembali --}}
                 <div class="flex items-center space-x-2 text-sm text-gray-600">
@@ -235,6 +247,37 @@
                                             <div class="progress-fill" style="width: {{ $tahap->progress }}%"></div>
                                         </div>
                                     </div>
+
+                                    {{-- TAMPILKAN FILE UPLOAD TAHAPAN DI SINI --}}
+                                    @if($tahap->file_path)
+                                    <div class="mt-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center">
+                                                <i class="fas fa-paperclip text-blue-600 mr-3"></i>
+                                                <div>
+                                                    <div class="text-sm font-medium text-gray-800">{{ $tahap->file_original_name }}</div>
+                                                    <div class="text-xs text-gray-500 mt-1">
+                                                        <i class="fas fa-hdd mr-1"></i>{{ $tahap->file_size }}
+                                                        <span class="mx-2">•</span>
+                                                        <i class="fas fa-calendar mr-1"></i>
+                                                        {{ \Carbon\Carbon::parse($tahap->created_at)->format('d/m/Y H:i') }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="flex space-x-2">
+                                                <a href="{{ route('download.file', ['type' => 'tahapan', 'id' => $tahap->id]) }}" 
+                                                   class="px-3 py-2 bg-blue-600 text-white rounded text-sm flex items-center hover:bg-blue-700 transition duration-300">
+                                                    <i class="fas fa-download mr-2"></i> Download
+                                                </a>
+                                                <a href="{{ asset('storage/' . $tahap->file_path) }}" 
+                                                   target="_blank" 
+                                                   class="px-3 py-2 bg-green-600 text-white rounded text-sm flex items-center hover:bg-green-700 transition duration-300">
+                                                    <i class="fas fa-eye mr-2"></i> Preview
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endif
                                 </div>
 
                                 <div class="flex flex-col space-y-2 ml-4">
@@ -290,6 +333,27 @@
                                                     <div class="progress-fill" style="width: {{ $submaster->progress }}%"></div>
                                                 </div>
                                             </div>
+
+                                            {{-- TAMPILKAN FILE UPLOAD SUBMASTER DI SINI --}}
+                                            @if($submaster->file_path)
+                                            <div class="mt-2 p-2 bg-green-50 rounded border border-green-200">
+                                                <div class="flex items-center justify-between">
+                                                    <div class="flex items-center">
+                                                        <i class="fas fa-paperclip text-green-600 mr-2"></i>
+                                                        <div>
+                                                            <div class="text-xs font-medium text-gray-800">{{ $submaster->file_original_name }}</div>
+                                                            <div class="text-xs text-gray-500">
+                                                                <i class="fas fa-hdd mr-1"></i>{{ $submaster->file_size }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <a href="{{ route('download.file', ['type' => 'submaster', 'id' => $submaster->id]) }}" 
+                                                       class="px-2 py-1 bg-green-600 text-white rounded text-xs flex items-center hover:bg-green-700">
+                                                        <i class="fas fa-download mr-1"></i> Download
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            @endif
                                         </div>
 
                                         <div class="flex flex-col space-y-2 ml-4">
@@ -345,6 +409,27 @@
                                                             <div class="progress-fill" style="width: {{ $subsection->progress }}%"></div>
                                                         </div>
                                                     </div>
+
+                                                    {{-- TAMPILKAN FILE UPLOAD SUBSECTION DI SINI --}}
+                                                    @if($subsection->file_path)
+                                                    <div class="mt-2 p-2 bg-purple-50 rounded border border-purple-200">
+                                                        <div class="flex items-center justify-between">
+                                                            <div class="flex items-center">
+                                                                <i class="fas fa-paperclip text-purple-600 mr-2"></i>
+                                                                <div>
+                                                                    <div class="text-xs font-medium text-gray-800">{{ $subsection->file_original_name }}</div>
+                                                                    <div class="text-xs text-gray-500">
+                                                                        <i class="fas fa-hdd mr-1"></i>{{ $subsection->file_size }}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <a href="{{ route('download.file', ['type' => 'subsection', 'id' => $subsection->id]) }}" 
+                                                               class="px-2 py-1 bg-purple-600 text-white rounded text-xs flex items-center hover:bg-purple-700">
+                                                                <i class="fas fa-download mr-1"></i> Download
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                    @endif
                                                 </div>
 
                                                 <div class="flex flex-col space-y-1 ml-4">
@@ -387,7 +472,7 @@
             </div>
 
             <!-- RIGHT: Calendar & Timeline -->
-            <div class="xl:col-span-1 space-y-6">
+            <div class="md:col-span-1 space-y-6">
 
                 <!-- Calendar -->
                 <section class="bg-white rounded-lg shadow p-4">
@@ -401,7 +486,7 @@
                             <i class="fas fa-chevron-left"></i>
                         </button>
 
-                        <span class="font-medium">November 2025</span>
+                        <span class="font-medium text-sm md:text-base">November 2025</span>
 
                         <button class="p-1 rounded-full hover:bg-gray-100">
                             <i class="fas fa-chevron-right"></i>
@@ -462,7 +547,7 @@
                         Timeline Global
                     </h2>
 
-                    <div class="space-y-3 max-h-96 overflow-y-auto">
+                    <div class="space-y-3 max-h-64 md:max-h-96 overflow-y-auto">
                         <div class="border-l-2 border-blue-500 pl-3 py-1">
                             <div class="text-xs text-gray-500">20/07/2023 • RS Sehat Sentosa</div>
                             <div class="text-sm">Tahapan "Pembentukan Tim" diselesaikan</div>
@@ -488,15 +573,16 @@
         </div>
     </div>
 
-    <!-- Modal Popup untuk Tambah Tahapan -->
-    <div id="modal-tahapan" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
-        <div class="bg-white rounded-lg shadow-lg p-6 max-w-xl w-full mx-4">
-            <div class="flex justify-between items-center mb-4">
-                <h1 class="text-xl font-bold">Tambah Tahapan untuk: {{ $faskes->nama }}</h1>
-                <button onclick="toggleModalTahapan()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
-            </div>
-
-            <form action="{{ route('tahapan.store', $faskes->id) }}" method="POST">
+<!-- Modal Popup untuk Tambah Tahapan - UPDATE INI -->
+<div id="modal-tahapan" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50 p-4">
+    <div class="bg-white rounded-lg shadow-lg max-w-xl w-full max-h-[90vh] flex flex-col">
+        <div class="flex justify-between items-center p-6 border-b border-gray-200 flex-shrink-0">
+            <h1 class="text-xl font-bold">Tambah Tahapan untuk: {{ $faskes->nama }}</h1>
+            <button onclick="toggleModalTahapan()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+        </div>
+        
+        <div class="p-6 overflow-y-auto flex-1">
+            <form action="{{ route('tahapan.store', $faskes->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
                 <label class="block mb-2">Nama Tahapan</label>
@@ -514,7 +600,33 @@
                 <label class="block mb-2">Progress (%)</label>
                 <input type="number" name="progress" min="0" max="100" placeholder="0" class="w-full border p-2 rounded mb-4">
 
-                <div class="flex justify-end space-x-2">
+                <!-- File Upload Section untuk TAHAPAN -->
+                <div class="mb-4">
+                    <label class="block mb-2 font-medium text-gray-700">Upload File Submit</label>
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-blue-400 transition duration-300">
+                        <input type="file" name="file" id="file-tahapan" class="hidden" 
+                               accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.zip,.rar">
+                        <label for="file-tahapan" class="cursor-pointer block">
+                            <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
+                            <p class="text-sm text-gray-600">Klik untuk upload file submit</p>
+                            <p class="text-xs text-gray-400 mt-1">PDF, DOC, Excel, PPT, JPG, PNG, ZIP, RAR (max: 10MB)</p>
+                        </label>
+                        <div id="file-info-tahapan" class="mt-2 hidden">
+                            <div class="flex items-center justify-between bg-green-50 p-2 rounded">
+                                <div class="flex items-center">
+                                    <i class="fas fa-file text-green-500 mr-2"></i>
+                                    <span id="file-name-tahapan" class="text-sm font-medium"></span>
+                                    <span id="file-size-tahapan" class="text-xs text-gray-500 ml-2"></span>
+                                </div>
+                                <button type="button" onclick="removeFile('tahapan')" class="text-red-500 hover:text-red-700">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end space-x-2 pt-4 border-t border-gray-200 mt-4 flex-shrink-0">
                     <button type="button" onclick="toggleModalTahapan()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">
                         Batal
                     </button>
@@ -525,16 +637,18 @@
             </form>
         </div>
     </div>
+</div>
 
-    <!-- Modal Popup untuk Tambah Sub Master -->
-    <div id="modal-submaster" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
-        <div class="bg-white rounded-lg shadow-lg p-6 max-w-xl w-full mx-4">
-            <div class="flex justify-between items-center mb-4">
-                <h1 class="text-xl font-bold">Tambah sub-master</h1>
-                <button onclick="toggleModalSubMaster()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
-            </div>
-
-            <form action="{{ route('submaster.store') }}" method="POST">
+<!-- Modal Popup untuk Tambah Sub Master - UPDATE INI -->
+<div id="modal-submaster" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50 p-4">
+    <div class="bg-white rounded-lg shadow-lg max-w-xl w-full max-h-[90vh] flex flex-col">
+        <div class="flex justify-between items-center p-6 border-b border-gray-200 flex-shrink-0">
+            <h1 class="text-xl font-bold">Tambah sub-master</h1>
+            <button onclick="toggleModalSubMaster()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+        </div>
+        
+        <div class="p-6 overflow-y-auto flex-1">
+            <form action="{{ route('submaster.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <input type="hidden" name="master_id" id="submaster_master_id">
 
@@ -550,7 +664,33 @@
                 <label class="block mb-2">Progress (%)</label>
                 <input type="number" name="progress" min="0" max="100" value="0" class="w-full border p-2 rounded mb-4">
 
-                <div class="flex justify-end space-x-2">
+                <!-- File Upload Section untuk SUBMASTER -->
+                <div class="mb-4">
+                    <label class="block mb-2 font-medium text-gray-700">Upload File Submit</label>
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-blue-400 transition duration-300">
+                        <input type="file" name="file" id="file-submaster" class="hidden" 
+                               accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.zip,.rar">
+                        <label for="file-submaster" class="cursor-pointer block">
+                            <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
+                            <p class="text-sm text-gray-600">Klik untuk upload file submit</p>
+                            <p class="text-xs text-gray-400 mt-1">PDF, DOC, Excel, PPT, JPG, PNG, ZIP, RAR (max: 10MB)</p>
+                        </label>
+                        <div id="file-info-submaster" class="mt-2 hidden">
+                            <div class="flex items-center justify-between bg-green-50 p-2 rounded">
+                                <div class="flex items-center">
+                                    <i class="fas fa-file text-green-500 mr-2"></i>
+                                    <span id="file-name-submaster" class="text-sm font-medium"></span>
+                                    <span id="file-size-submaster" class="text-xs text-gray-500 ml-2"></span>
+                                </div>
+                                <button type="button" onclick="removeFile('submaster')" class="text-red-500 hover:text-red-700">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end space-x-2 pt-4 border-t border-gray-200 mt-4 flex-shrink-0">
                     <button type="button" onclick="toggleModalSubMaster()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">
                         Batal
                     </button>
@@ -561,16 +701,18 @@
             </form>
         </div>
     </div>
+</div>
 
-    <!-- Modal Popup untuk Tambah Sub Section -->
-    <div id="modal-subsection" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
-        <div class="bg-white rounded-lg shadow-lg p-6 max-w-md w-full mx-4">
-            <div class="flex justify-between items-center mb-4">
-                <h1 class="text-xl font-bold">Tambah Sub-section</h1>
-                <button onclick="toggleModalSubSection()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
-            </div>
-
-            <form action="{{ route('subsection.store') }}" method="POST">
+<!-- Modal Popup untuk Tambah Sub Section - UPDATE INI -->
+<div id="modal-subsection" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50 p-4">
+    <div class="bg-white rounded-lg shadow-lg max-w-md w-full max-h-[90vh] flex flex-col">
+        <div class="flex justify-between items-center p-6 border-b border-gray-200 flex-shrink-0">
+            <h1 class="text-xl font-bold">Tambah Sub-section</h1>
+            <button onclick="toggleModalSubSection()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+        </div>
+        
+        <div class="p-6 overflow-y-auto flex-1">
+            <form action="{{ route('subsection.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <input type="hidden" name="sub_master_id" id="subsection_sub_master_id">
 
@@ -586,7 +728,33 @@
                 <label class="block mb-2">Progress (%)</label>
                 <input type="number" name="progress" min="0" max="100" value="0" class="w-full border p-2 rounded mb-4">
 
-                <div class="flex justify-end space-x-2">
+                <!-- File Upload Section untuk SUBSECTION -->
+                <div class="mb-4">
+                    <label class="block mb-2 font-medium text-gray-700">Upload File Submit</label>
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-blue-400 transition duration-300">
+                        <input type="file" name="file" id="file-subsection" class="hidden" 
+                               accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.zip,.rar">
+                        <label for="file-subsection" class="cursor-pointer block">
+                            <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
+                            <p class="text-sm text-gray-600">Klik untuk upload file submit</p>
+                            <p class="text-xs text-gray-400 mt-1">PDF, DOC, Excel, PPT, JPG, PNG, ZIP, RAR (max: 10MB)</p>
+                        </label>
+                        <div id="file-info-subsection" class="mt-2 hidden">
+                            <div class="flex items-center justify-between bg-green-50 p-2 rounded">
+                                <div class="flex items-center">
+                                    <i class="fas fa-file text-green-500 mr-2"></i>
+                                    <span id="file-name-subsection" class="text-sm font-medium"></span>
+                                    <span id="file-size-subsection" class="text-xs text-gray-500 ml-2"></span>
+                                </div>
+                                <button type="button" onclick="removeFile('subsection')" class="text-red-500 hover:text-red-700">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end space-x-2 pt-4 border-t border-gray-200 mt-4 flex-shrink-0">
                     <button type="button" onclick="toggleModalSubSection()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">
                         Batal
                     </button>
@@ -597,6 +765,54 @@
             </form>
         </div>
     </div>
+</div>
 
+    <script>
+    // Function untuk handle file upload preview
+    function handleFileUpload(type) {
+        const fileInput = document.getElementById(`file-${type}`);
+        const fileInfo = document.getElementById(`file-info-${type}`);
+        const fileName = document.getElementById(`file-name-${type}`);
+        const fileSize = document.getElementById(`file-size-${type}`);
+        
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                fileName.textContent = file.name;
+                fileSize.textContent = formatFileSize(file.size);
+                fileInfo.classList.remove('hidden');
+            }
+        });
+    }
+
+    // Function untuk remove file
+    function removeFile(type) {
+        const fileInput = document.getElementById(`file-${type}`);
+        const fileInfo = document.getElementById(`file-info-${type}`);
+        
+        fileInput.value = '';
+        fileInfo.classList.add('hidden');
+    }
+
+    // Function untuk format file size
+    function formatFileSize(bytes) {
+        if (bytes >= 1073741824) {
+            return (bytes / 1073741824).toFixed(2) + ' GB';
+        } else if (bytes >= 1048576) {
+            return (bytes / 1048576).toFixed(2) + ' MB';
+        } else if (bytes >= 1024) {
+            return (bytes / 1024).toFixed(2) + ' KB';
+        } else {
+            return bytes + ' bytes';
+        }
+    }
+
+    // Initialize file upload handlers
+    document.addEventListener('DOMContentLoaded', function() {
+        handleFileUpload('tahapan');
+        handleFileUpload('submaster');
+        handleFileUpload('subsection');
+    });
+    </script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 <?php
-
+// app/Models/Master.php
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -16,10 +16,15 @@ class Master extends Model
         'catatan',
         'progress',
         'completed',
+        'file_path',
+        'file_name',
+        'file_original_name',
+        'file_size'
     ];
 
     protected $casts = [
         'deadline' => 'date',
+        'completed' => 'boolean'
     ];
 
     public function faskes()
@@ -27,7 +32,6 @@ class Master extends Model
         return $this->belongsTo(Faskes::class, 'faskes_id');
     }
 
-    // RELASI BARU KE SUB MASTER
     public function submasters()
     {
         return $this->hasMany(SubMaster::class, 'master_id');

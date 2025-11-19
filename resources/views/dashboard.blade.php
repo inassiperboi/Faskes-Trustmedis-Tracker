@@ -40,6 +40,17 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        /* Tambahan untuk responsivitas kalender pada mobile */
+        @media (max-width: 640px) {
+            .calendar-day {
+                width: 28px;
+                height: 28px;
+                font-size: 0.7rem;
+            }
+            .grid-cols-7 {
+                gap: 0.5rem;
+            }
+        }
     </style>
 
     <script>
@@ -78,11 +89,11 @@
     </header>
 
     <!-- Container untuk memberikan jarak lebih dari pinggir body -->
-    <div class="container mx-auto px-8">
-        <div class="grid grid-cols-1 xl:grid-cols-4 gap-8">
+    <div class="container mx-auto px-4 md:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-8">
 
             <!-- LEFT: Faskes List -->
-            <div class="xl:col-span-3 space-y-6">
+            <div class="md:col-span-3 space-y-6">
 
                 <section class="bg-white rounded-lg shadow">
                     <div class="p-4 border-b border-gray-200 flex justify-between items-center">
@@ -98,16 +109,16 @@
                         </button>
                     </div>
 
-                    <div class="p-6 space-y-6">
+                    <div class="p-4 md:p-6 space-y-6">
 
                         {{-- LOOP FASKES DARI DATABASE --}}
                         @foreach ($faskes as $item)
-                            <div class="border border-gray-200 rounded-xl p-5 hover:shadow-lg transition duration-300 fade-in bg-white">
+                            <div class="border border-gray-200 rounded-xl p-4 md:p-5 hover:shadow-lg transition duration-300 fade-in bg-white">
                                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                                     <div class="flex-1">
                                         <div class="flex items-center mb-3">
                                             <i class="fas fa-hospital text-blue-500 mr-3 text-xl"></i>
-                                            <h3 class="font-semibold text-xl text-gray-800">{{ $item->nama }}</h3>
+                                            <h3 class="font-semibold text-lg md:text-xl text-gray-800">{{ $item->nama }}</h3>
                                         </div>
 
                                         <div class="mt-4 text-gray-600 space-y-2">
@@ -135,7 +146,7 @@
                                     </div>
 
                                     <a href="{{ url('/faskes/' . $item->id) }}"
-                                       class="px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300 flex items-center shadow-md">
+                                       class="px-4 md:px-5 py-2 md:py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300 flex items-center shadow-md">
                                         <i class="fas fa-eye mr-2"></i>
                                         Lihat Detail
                                     </a>
@@ -149,7 +160,7 @@
             </div>
 
             <!-- RIGHT: Calendar & Timeline -->
-            <div class="xl:col-span-1 space-y-6">
+            <div class="md:col-span-1 space-y-6">
 
                 <!-- Calendar -->
                 <section class="bg-white rounded-lg shadow p-4">
@@ -163,7 +174,7 @@
                             <i class="fas fa-chevron-left"></i>
                         </button>
 
-                        <span class="font-medium">November 2025</span>
+                        <span class="font-medium text-sm md:text-base">November 2025</span>
 
                         <button class="p-1 rounded-full hover:bg-gray-100">
                             <i class="fas fa-chevron-right"></i>
@@ -224,7 +235,7 @@
                         Timeline Global
                     </h2>
 
-                    <div class="space-y-3 max-h-96 overflow-y-auto">
+                    <div class="space-y-3 max-h-64 md:max-h-96 overflow-y-auto">
                         <div class="border-l-2 border-blue-500 pl-3 py-1">
                             <div class="text-xs text-gray-500">20/07/2023 • RS Sehat Sentosa</div>
                             <div class="text-sm">Tahapan "Pembentukan Tim" diselesaikan</div>

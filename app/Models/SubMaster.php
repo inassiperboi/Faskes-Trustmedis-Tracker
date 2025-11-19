@@ -1,5 +1,5 @@
 <?php
-
+// app/Models/SubMaster.php
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -14,7 +14,11 @@ class SubMaster extends Model
         'deadline',
         'catatan',
         'progress',
-        'completed'
+        'completed',
+        'file_path',
+        'file_name',
+        'file_original_name',
+        'file_size'
     ];
 
     protected $casts = [
@@ -27,7 +31,6 @@ class SubMaster extends Model
         return $this->belongsTo(Master::class, 'master_id');
     }
 
-    // RELASI BARU KE SUB SECTIONS
     public function subsections()
     {
         return $this->hasMany(SubSection::class, 'sub_master_id');

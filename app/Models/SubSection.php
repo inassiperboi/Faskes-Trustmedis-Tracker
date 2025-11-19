@@ -1,5 +1,5 @@
 <?php
-
+// app/Models/SubSection.php
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -14,7 +14,11 @@ class SubSection extends Model
         'deadline',
         'catatan',
         'progress',
-        'completed'
+        'completed',
+        'file_path',
+        'file_name',
+        'file_original_name',
+        'file_size'
     ];
 
     protected $casts = [
