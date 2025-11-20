@@ -6,6 +6,7 @@ use App\Http\Controllers\FaskesController;
 use App\Http\Controllers\TahapanController;
 use App\Http\Controllers\SubMasterController;
 use App\Http\Controllers\SubSectionController;
+use App\Http\Controllers\CalendarController;
 
 // ==================== ROUTE DASHBOARD ====================
 Route::get('/', [FaskesController::class, 'index'])->name('dashboard');
@@ -66,3 +67,7 @@ Route::get('/preview/{type}/{id}', function ($type, $id) {
     
     return response()->file(storage_path('app/public/' . $model->file_path));
 })->name('preview.file');
+
+// Di routes/web.php
+Route::get('/kalender', [CalendarController::class, 'index'])->name('calendar.index');
+Route::get('/api/kalender/events', [CalendarController::class, 'apiEvents'])->name('calendar.events');

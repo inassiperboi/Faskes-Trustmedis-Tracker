@@ -6,7 +6,9 @@
     <title>Detail Faskes - Dashboard Implementasi Faskes</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    <!-- FullCalendar CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+    
     <style>
         .progress-bar {
             height: 8px;
@@ -18,20 +20,6 @@
             height: 100%;
             background-color: #3b82f6;
             transition: width 0.3s ease;
-        }
-        .calendar-day {
-            width: 28px;
-            height: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            font-size: 0.7rem;
-            cursor: pointer;
-        }
-        .calendar-day.today {
-            background-color: #3b82f6;
-            color: white;
         }
         .fade-in {
             animation: fadeIn 0.5s ease-in-out;
@@ -70,16 +58,78 @@
             color: #166534;
         }
         
-        /* Tambahan untuk responsivitas kalender pada mobile */
-        @media (max-width: 640px) {
-            .calendar-day {
-                width: 28px;
-                height: 28px;
-                font-size: 0.7rem;
-            }
-            .grid-cols-7 {
-                gap: 0.5rem;
-            }
+        /* Styles untuk kalender mini di detail faskes */
+        #calendar-mini {
+            font-size: 0.85rem;
+            font-family: 'Inter', sans-serif;
+        }
+        #calendar-mini .fc-header-toolbar {
+            margin-bottom: 0.75em;
+            font-size: 0.9rem;
+            background: linear-gradient(135deg, #3b82f6, #1e40af);
+            color: white;
+            border-radius: 8px;
+            padding: 0.5em;
+        }
+        #calendar-mini .fc-toolbar-title {
+            font-size: 1rem;
+            font-weight: bold;
+        }
+        #calendar-mini .fc-button {
+            padding: 0.3em 0.6em;
+            font-size: 0.8rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            transition: background 0.3s ease;
+        }
+        #calendar-mini .fc-button:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+        #calendar-mini .fc-button:not(:disabled).fc-button-active {
+            background: white;
+            color: #3b82f6;
+        }
+        #calendar-mini .fc-daygrid-day-frame {
+            min-height: 2.5rem;
+            border-radius: 6px;
+            transition: background 0.3s ease;
+        }
+        #calendar-mini .fc-daygrid-day:hover {
+            background: #f0f9ff;
+        }
+        #calendar-mini .fc-daygrid-day-number {
+            font-size: 0.8rem;
+            padding: 4px;
+            font-weight: 600;
+        }
+        #calendar-mini .fc-event {
+            font-size: 0.7rem;
+            padding: 2px 4px;
+            margin: 2px 0;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        #calendar-mini .fc-event:hover {
+            transform: scale(1.05);
+        }
+        #calendar-mini .fc-day-today {
+            background: #dbeafe !important;
+            border: 2px solid #3b82f6;
+        }
+        .legend-item {
+            display: inline-flex;
+            align-items: center;
+            margin-right: 0.5rem;
+            font-size: 0.8rem;
+        }
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+            margin-right: 0.4rem;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         }
     </style>
 
@@ -236,23 +286,8 @@
             modal.classList.toggle('hidden');
         }
 
-        // Highlight today's date in calendar
+        // Set form actions for edit forms
         document.addEventListener('DOMContentLoaded', function() {
-            const today = new Date();
-            const currentMonth = 10; // November (0-indexed)
-            const currentYear = 2025;
-            
-            // Only highlight if we're in November 2025
-            if (today.getMonth() === currentMonth && today.getFullYear() === currentYear) {
-                const dayElements = document.querySelectorAll('.calendar-day');
-                dayElements.forEach(day => {
-                    if (parseInt(day.textContent) === today.getDate() && !day.classList.contains('text-gray-300')) {
-                        day.classList.add('today');
-                    }
-                });
-            }
-
-            // Set form actions for edit forms
             const editTahapanForm = document.getElementById('form-edit-tahapan');
             editTahapanForm.addEventListener('submit', function(e) {
                 const id = document.getElementById('edit_tahapan_id').value;
@@ -685,70 +720,35 @@
             <!-- RIGHT: Calendar & Timeline -->
             <div class="md:col-span-1 space-y-6">
 
-                <!-- Calendar -->
+                <!-- Calendar Global Dinamis -->
                 <section class="bg-white rounded-lg shadow p-4">
-                    <h2 class="text-lg font-semibold mb-3 flex items-center">
-                        <i class="fas fa-calendar-alt text-blue-600 mr-2"></i>
-                        Kalender Global
-                    </h2>
-
-                    <div class="mb-4 flex justify-between items-center">
-                        <button class="p-1 rounded-full hover:bg-gray-100">
-                            <i class="fas fa-chevron-left"></i>
-                        </button>
-
-                        <span class="font-medium text-sm md:text-base">November 2025</span>
-
-                        <button class="p-1 rounded-full hover:bg-gray-100">
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
+                    <div class="flex justify-between items-center mb-3">
+                        <h2 class="text-lg font-semibold flex items-center">
+                            <i class="fas fa-calendar-alt text-blue-600 mr-2"></i>
+                            Kalender Global
+                        </h2>
+                        <a href="{{ route('calendar.index') }}" 
+                           class="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded hover:bg-blue-200 transition duration-300">
+                            Lihat Detail
+                        </a>
                     </div>
 
-                    <div class="grid grid-cols-7 gap-1 mb-2 text-center text-xs text-gray-500">
-                        <div>M</div><div>S</div><div>S</div><div>R</div><div>K</div><div>J</div><div>S</div>
+                    <!-- Legend Mini -->
+                    <div class="mb-3">
+                        <div class="flex flex-wrap gap-2">
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #3b82f6;"></div>
+                                <span>Tahapan</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #10b981;"></div>
+                                <span>Sub</span>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="grid grid-cols-7 gap-1">
-                        <div class="calendar-day text-gray-300">29</div>
-                        <div class="calendar-day text-gray-300">30</div>
-                        <div class="calendar-day text-gray-300">31</div>
-                        <div class="calendar-day">1</div>
-                        <div class="calendar-day">2</div>
-                        <div class="calendar-day">3</div>
-                        <div class="calendar-day">4</div>
-
-                        <div class="calendar-day">5</div>
-                        <div class="calendar-day">6</div>
-                        <div class="calendar-day">7</div>
-                        <div class="calendar-day">8</div>
-                        <div class="calendar-day">9</div>
-                        <div class="calendar-day">10</div>
-                        <div class="calendar-day">11</div>
-
-                        <div class="calendar-day">12</div>
-                        <div class="calendar-day">13</div>
-                        <div class="calendar-day">14</div>
-                        <div class="calendar-day">15</div>
-                        <div class="calendar-day">16</div>
-                        <div class="calendar-day">17</div>
-                        <div class="calendar-day">18</div>
-
-                        <div class="calendar-day">19</div>
-                        <div class="calendar-day">20</div>
-                        <div class="calendar-day">21</div>
-                        <div class="calendar-day">22</div>
-                        <div class="calendar-day">23</div>
-                        <div class="calendar-day">24</div>
-                        <div class="calendar-day">25</div>
-
-                        <div class="calendar-day">26</div>
-                        <div class="calendar-day">27</div>
-                        <div class="calendar-day">28</div>
-                        <div class="calendar-day">29</div>
-                        <div class="calendar-day">30</div>
-                        <div class="calendar-day text-gray-300">1</div>
-                        <div class="calendar-day text-gray-300">2</div>
-                    </div>
+                    <!-- Kalender Mini -->
+                    <div id="calendar-mini"></div>
                 </section>
 
                 <!-- Timeline -->
@@ -1146,52 +1146,102 @@
     </div>
 </div>
 
+    <!-- FullCalendar JS -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/id.js"></script>
+    
     <script>
-    // Function untuk handle file upload preview
-    function handleFileUpload(type) {
-        const fileInput = document.getElementById(`file-${type}`);
-        const fileInfo = document.getElementById(`file-info-${type}`);
-        const fileName = document.getElementById(`file-name-${type}`);
-        const fileSize = document.getElementById(`file-size-${type}`);
-        
-        fileInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                fileName.textContent = file.name;
-                fileSize.textContent = formatFileSize(file.size);
-                fileInfo.classList.remove('hidden');
-            }
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar-mini');
+            
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: 'id',
+                headerToolbar: {
+                    left: 'prev,next',
+                    center: 'title',
+                    right: ''
+                },
+                height: 'auto',
+                contentHeight: 'auto',
+                events: '{{ route("calendar.events") }}',
+                eventClick: function(info) {
+                    if (info.event.url) {
+                        window.location.href = info.event.url;
+                    }
+                },
+                eventDidMount: function(info) {
+                    // Tambahkan tooltip
+                    info.el.title = info.event.title;
+                    
+                    // Highlight deadline yang mendekati (kurang dari 3 hari)
+                    const eventDate = new Date(info.event.start);
+                    const today = new Date();
+                    const diffTime = eventDate - today;
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    
+                    if (diffDays <= 3 && diffDays >= 0) {
+                        info.el.style.backgroundColor = '#ef4444';
+                        info.el.style.borderColor = '#ef4444';
+                        info.el.style.color = 'white';
+                    }
+                },
+                dayMaxEvents: 2, // Limit events per day untuk tampilan mini
+                eventTimeFormat: {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    meridiem: false
+                }
+            });
+            
+            calendar.render();
         });
-    }
 
-    // Function untuk remove file
-    function removeFile(type) {
-        const fileInput = document.getElementById(`file-${type}`);
-        const fileInfo = document.getElementById(`file-info-${type}`);
-        
-        fileInput.value = '';
-        fileInfo.classList.add('hidden');
-    }
-
-    // Function untuk format file size
-    function formatFileSize(bytes) {
-        if (bytes >= 1073741824) {
-            return (bytes / 1073741824).toFixed(2) + ' GB';
-        } else if (bytes >= 1048576) {
-            return (bytes / 1048576).toFixed(2) + ' MB';
-        } else if (bytes >= 1024) {
-            return (bytes / 1024).toFixed(2) + ' KB';
-        } else {
-            return bytes + ' bytes';
+        // Function untuk handle file upload preview
+        function handleFileUpload(type) {
+            const fileInput = document.getElementById(`file-${type}`);
+            const fileInfo = document.getElementById(`file-info-${type}`);
+            const fileName = document.getElementById(`file-name-${type}`);
+            const fileSize = document.getElementById(`file-size-${type}`);
+            
+            fileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    fileName.textContent = file.name;
+                    fileSize.textContent = formatFileSize(file.size);
+                    fileInfo.classList.remove('hidden');
+                }
+            });
         }
-    }
 
-    // Initialize file upload handlers
-    document.addEventListener('DOMContentLoaded', function() {
-        handleFileUpload('tahapan');
-        handleFileUpload('submaster');
-        handleFileUpload('subsection');
-    });
+        // Function untuk remove file
+        function removeFile(type) {
+            const fileInput = document.getElementById(`file-${type}`);
+            const fileInfo = document.getElementById(`file-info-${type}`);
+            
+            fileInput.value = '';
+            fileInfo.classList.add('hidden');
+        }
+
+        // Function untuk format file size
+        function formatFileSize(bytes) {
+            if (bytes >= 1073741824) {
+                return (bytes / 1073741824).toFixed(2) + ' GB';
+            } else if (bytes >= 1048576) {
+                return (bytes / 1048576).toFixed(2) + ' MB';
+            } else if (bytes >= 1024) {
+                return (bytes / 1024).toFixed(2) + ' KB';
+            } else {
+                return bytes + ' bytes';
+            }
+        }
+
+        // Initialize file upload handlers
+        document.addEventListener('DOMContentLoaded', function() {
+            handleFileUpload('tahapan');
+            handleFileUpload('submaster');
+            handleFileUpload('subsection');
+        });
     </script>
 </body>
 </html>
