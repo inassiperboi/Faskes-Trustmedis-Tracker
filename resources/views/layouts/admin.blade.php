@@ -370,6 +370,12 @@
                         <span>Kelola Faskes</span>
                     </a>
                 </li>
+                <li class="{{ request()->routeIs('admin.master-tahapan.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.master-tahapan.index') }}">
+                        <i class="fas fa-clipboard-list"></i>
+                        <span>Master Tahapan</span>
+                    </a>
+                </li>
                 <li class="{{ request()->routeIs('admin.master.*') ? 'active' : '' }}">
                     <a href="{{ route('admin.master.index') }}">
                         <i class="fas fa-database"></i>
@@ -395,12 +401,12 @@
                     </a>
                 </li>
                 <li>
-                    <form action="{{ route('logout') }}" method="POST" id="logout-form">
+                    <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </a>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                         @csrf
-                        <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                            <i class="fas fa-sign-out-alt"></i>
-                            <span>Logout</span>
-                        </a>
                     </form>
                 </li>
             </ul>

@@ -10,6 +10,7 @@ class Master extends Model
 
     protected $fillable = [
         'faskes_id',
+        'master_tahapan_id', // Added reference to master tahapan
         'nama',        // Nama Tahapan
         'deadline',    // Deadline
         'catatan',      // Catatan
@@ -26,6 +27,11 @@ class Master extends Model
     public function faskes()
     {
         return $this->belongsTo(Faskes::class, 'faskes_id');
+    }
+
+    public function masterTahapan()
+    {
+        return $this->belongsTo(MasterTahapan::class, 'master_tahapan_id');
     }
 
     public function submasters()

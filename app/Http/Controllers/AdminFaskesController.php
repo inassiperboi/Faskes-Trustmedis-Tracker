@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Faskes;
-use App\Models\User; // import User model
+use App\Models\User;
+use App\Models\MasterTahapan; // Import MasterTahapan
+use App\Models\Master; // Import Master
 use Illuminate\Http\Request;
 
 class AdminFaskesController extends Controller
@@ -25,20 +27,32 @@ class AdminFaskesController extends Controller
         $request->validate([
             'nama' => 'required|string|max:255',
             'penanggung_jawab' => 'required|string|max:255',
-            'tim' => 'nullable|array', // validate as array
-            'catatan' => 'nullable|string', // validate catatan
+            'tim' => 'nullable|array',
+            'catatan' => 'nullable|string',
         ]);
 
         $tim = $request->tim ? implode(', ', $request->tim) : null;
 
-        Faskes::create([
+        $faskes = Faskes::create([
             'nama' => $request->nama,
             'penanggung_jawab' => $request->penanggung_jawab,
             'tim' => $tim,
             'catatan' => $request->catatan,
         ]);
 
-        return redirect()->route('admin.faskes.index')->with('success', 'Faskes berhasil ditambahkan');
+        $masterTahapan = MasterTahapan::orderBy('urutan')->get();
+        foreach ($masterTahapan as $tahapan) {
+            Master::create([
+                'faskes_id' => $faskes->id,
+                'master_tahapan_id' => $tahapan->id,
+                'nama' => $tahapan->nama,
+                'deadline' => null,
+                'catatan' => $tahapan->keterangan,
+            ]);
+        }
+
+        return redirect()->route('admin.faskes.index')
+            ->with('success', 'Faskes berhasil ditambahkan dan tahapan telah disalin dari Master Tahapan');
     }
 
     public function edit(Faskes $faske)
@@ -52,8 +66,8 @@ class AdminFaskesController extends Controller
         $request->validate([
             'nama' => 'required|string|max:255',
             'penanggung_jawab' => 'required|string|max:255',
-            'tim' => 'nullable|array', // validate as array
-            'catatan' => 'nullable|string', // validate catatan
+            'tim' => 'nullable|array',
+            'catatan' => 'nullable|string',
         ]);
 
         $tim = $request->tim ? implode(', ', $request->tim) : null;

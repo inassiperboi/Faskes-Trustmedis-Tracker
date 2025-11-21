@@ -11,6 +11,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController; // Added UserController import
 use App\Http\Controllers\AdminFaskesController; // Added AdminFaskesController import
 use App\Http\Controllers\AdminMasterController; // Added AdminMasterController import
+use App\Http\Controllers\AdminMasterTahapanController; // Added AdminMasterTahapanController
 use App\Http\Controllers\AdminSubMasterController; // Added AdminSubMasterController import
 use App\Http\Controllers\AdminSubSectionController; // Added AdminSubSectionController import
 use App\Models\User; // Import User model
@@ -53,6 +54,10 @@ Route::middleware(['auth'])->group(function () {
     
     Route::resource('admin/faskes', AdminFaskesController::class, [
         'names' => 'admin.faskes'
+    ]);
+
+    Route::resource('admin/master-tahapan', AdminMasterTahapanController::class, [
+        'names' => 'admin.master-tahapan'
     ]);
 
     Route::resource('admin/master', AdminMasterController::class, [
