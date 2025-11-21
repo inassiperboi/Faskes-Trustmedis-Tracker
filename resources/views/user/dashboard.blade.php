@@ -109,6 +109,54 @@
             const modal = document.getElementById('modal');
             modal.classList.toggle('hidden');
         }
+
+        function addTeamMember(selectElement) {
+            const value = selectElement.value;
+            const text = selectElement.options[selectElement.selectedIndex].text;
+            
+            if (!value) return;
+
+            // Check duplicates
+            const inputs = document.querySelectorAll('input[name="tim[]"]');
+            for(let input of inputs) {
+                if(input.value === value) {
+                    selectElement.value = "";
+                    return;
+                }
+            }
+
+            const uniqueId = 'team-' + Date.now() + Math.floor(Math.random() * 1000);
+
+            // Create Tag
+            const container = document.getElementById('selected-teams-container');
+            const tag = document.createElement('div');
+            tag.id = `tag-${uniqueId}`;
+            tag.className = "bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full flex items-center mb-2 mr-2";
+            tag.innerHTML = `
+                <span>${text}</span>
+                <button type="button" onclick="removeTeamMember('${uniqueId}')" class="ml-2 text-blue-600 hover:text-blue-800 focus:outline-none font-bold">
+                    &times;
+                </button>
+            `;
+            container.appendChild(tag);
+
+            // Create Hidden Input
+            const inputsContainer = document.getElementById('hidden-inputs-container');
+            const input = document.createElement('input');
+            input.type = "hidden";
+            input.name = "tim[]";
+            input.value = value;
+            input.id = `input-${uniqueId}`;
+            inputsContainer.appendChild(input);
+
+            // Reset Select
+            selectElement.value = "";
+        }
+
+        function removeTeamMember(uniqueId) {
+            document.getElementById(`tag-${uniqueId}`).remove();
+            document.getElementById(`input-${uniqueId}`).remove();
+        }
     </script>
 </head>
 
@@ -128,13 +176,17 @@
             <div class="flex items-center">
                 <div class="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full mr-4">
                     <i class="fas fa-user-circle mr-1"></i>
-                    <span>Admin</span>
+                    <span>{{ Auth::user()->name ?? 'User' }}</span>
                 </div>
 
-                <button class="flex items-center px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition duration-300">
-                    <i class="fas fa-sign-out-alt mr-2"></i>
-                    Logout
-                </button>
+                {{-- Updated logout button to use form submission --}}
+                <form action="{{ route('logout') }}" method="POST" class="inline">
+                    @csrf
+                    <button type="submit" class="flex items-center px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition duration-300">
+                        <i class="fas fa-sign-out-alt mr-2"></i>
+                        Logout
+                    </button>
+                </form>
             </div>
         </div>
     </header>
@@ -291,14 +343,35 @@
                 <label class="block mb-2">Nama Faskes</label>
                 <input type="text" name="nama" placeholder="contoh: Rs Sehat sentosa" class="w-full border p-2 rounded mb-4" required>
 
-                <label class="block mb-2">Penanggung Jawab</label>
-                <input type="text" name="penanggung_jawab" placeholder="Contoh: Nama penanggung jawab" class="w-full border p-2 rounded mb-4" required>
+                {{-- Updated Penanggung Jawab to Dropdown --}}
+                <label class="block mb-2">APO (Penanggung Jawab)</label>
+                <select name="penanggung_jawab" class="w-full border p-2 rounded mb-4" required>
+                    <option value="">Pilih APO</option>
+                    @foreach($users as $user)
+                        <option value="{{ $user->name }}">{{ $user->name }}</option>
+                    @endforeach
+                </select>
 
-                <label class="block mb-2">Tim (pisahkan dengan koma)</label>
-                <textarea name="tim" placeholder="Contoh: Budi, Rina, Sinta" class="w-full border p-2 rounded mb-4"></textarea>
+                {{-- Updated Tim to Custom Multi-Select UI --}}
+                <label class="block mb-2">Tim</label>
+                
+                <!-- Container for selected tags -->
+                <div id="selected-teams-container" class="flex flex-wrap mb-2"></div>
+                
+                <!-- Hidden inputs container -->
+                <div id="hidden-inputs-container"></div>
 
-                <label class="block mb-2">Progress (%)</label>
-                <input type="number" name="progress" min="0" max="100" class="w-full border p-2 rounded mb-4">
+                <!-- Dropdown to select -->
+                <select id="team-selector" class="w-full border p-2 rounded mb-4" onchange="addTeamMember(this)">
+                    <option value="">Pilih Anggota Tim</option>
+                    @foreach($users as $user)
+                        <option value="{{ $user->name }}">{{ $user->name }}</option>
+                    @endforeach
+                </select>
+
+                {{-- Changed Progress to Catatan --}}
+                <label class="block mb-2">Catatan</label>
+                <textarea name="catatan" placeholder="Tambahkan catatan..." class="w-full border p-2 rounded mb-4"></textarea>
 
                 <div class="flex justify-end space-x-2">
                     <button type="button" onclick="toggleModal()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">

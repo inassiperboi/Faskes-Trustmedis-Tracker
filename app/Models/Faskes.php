@@ -12,7 +12,7 @@ class Faskes extends Model
         'nama',
         'penanggung_jawab',
         'tim',
-        'progress',
+        'catatan', // replaced progress with catatan
     ];
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Faskes;
+use App\Models\User; // Import User model
 use Illuminate\Http\Request;
 
 class FaskesController extends Controller
@@ -11,7 +12,8 @@ class FaskesController extends Controller
     public function index()
     {
         $faskes = Faskes::orderBy('created_at', 'desc')->get();
-        return view('dashboard', compact('faskes'));
+        $users = User::where('role', 'user')->get();
+        return view('user.dashboard', compact('faskes', 'users'));
     }
 
     // ====== TAMPILKAN FORM TAMBAH ======
@@ -26,15 +28,15 @@ class FaskesController extends Controller
         $request->validate([
             'nama' => 'required|max:255',
             'penanggung_jawab' => 'required|max:255',
-            'tim' => 'nullable|string',
-            'progress' => 'nullable|integer|min:0|max:100',
+            'tim' => 'nullable|array', // Validate as array
+            'catatan' => 'nullable|string', // Validate catatan instead of progress
         ]);
 
         Faskes::create([
             'nama' => $request->nama,
             'penanggung_jawab' => $request->penanggung_jawab,
-            'tim' => $request->tim,
-            'progress' => $request->progress ?? 0,
+            'tim' => $request->tim ? implode(', ', $request->tim) : null, // Convert array to string
+            'catatan' => $request->catatan, // Save catatan
         ]);
 
         return redirect()->route('dashboard')->with('success', 'Faskes berhasil ditambahkan!');
@@ -45,6 +47,6 @@ class FaskesController extends Controller
     {
         $faskes = Faskes::with(['tahapan.subMasters'])->findOrFail($id);
 
-        return view('detailfaskes', compact('faskes'));
+        return view('user.detailfaskes', compact('faskes'));
     }
 }

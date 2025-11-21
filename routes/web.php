@@ -7,12 +7,34 @@ use App\Http\Controllers\TahapanController;
 use App\Http\Controllers\SubMasterController;
 use App\Http\Controllers\SubSectionController;
 use App\Http\Controllers\CalendarController;
-use App\Http\Controllers\AuthController; // <- UBAH INI
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController; // Added UserController import
+use App\Http\Controllers\AdminFaskesController; // Added AdminFaskesController import
+use App\Http\Controllers\AdminMasterController; // Added AdminMasterController import
+use App\Http\Controllers\AdminSubMasterController; // Added AdminSubMasterController import
+use App\Http\Controllers\AdminSubSectionController; // Added AdminSubSectionController import
+use App\Models\User; // Import User model
 
 // ==================== ROUTE AUTHENTICATION ====================
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login'); // <- UBAH INI
 Route::post('/login', [AuthController::class, 'login']); // <- UBAH INI
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout'); // <- UBAH INI
+
+Route::get('/create-admin-megan', function () {
+    if (User::where('email', 'megan@trustmedis.com')->exists()) {
+        return 'User megan@trustmedis.com already exists!';
+    }
+
+    User::create([
+        'name' => 'megan',
+        'email' => 'megan@trustmedis.com',
+        'password' => 'megan1234', // Will be hashed by model cast
+        'role' => 'admin',
+        'jabatan' => 'magang',
+    ]);
+
+    return 'User megan@trustmedis.com created successfully! You can now login.';
+});
 
 // ==================== DEFAULT ROUTE ====================
 Route::get('/', function () {
@@ -22,6 +44,30 @@ Route::get('/', function () {
 // ==================== PROTECTED ROUTES ====================
 Route::middleware(['auth'])->group(function () {
     
+    // ==================== ROUTE ADMIN ====================
+    Route::get('/admin/dashboard', function () {
+        return view('admin.admindash');
+    })->name('admin.dashboard');
+
+    Route::resource('users', UserController::class);
+    
+    Route::resource('admin/faskes', AdminFaskesController::class, [
+        'names' => 'admin.faskes'
+    ]);
+
+    Route::resource('admin/master', AdminMasterController::class, [
+        'names' => 'admin.master'
+    ]);
+
+    Route::resource('admin/submaster', AdminSubMasterController::class, [
+        'names' => 'admin.submaster'
+    ]);
+
+    // ==================== ROUTE ADMIN SUBSECTION ====================
+    Route::resource('admin/subsection', AdminSubSectionController::class, [
+        'names' => 'admin.subsection'
+    ]);
+
     // ==================== ROUTE DASHBOARD ====================
     Route::get('/dashboard', [FaskesController::class, 'index'])->name('dashboard');
 

@@ -12,7 +12,11 @@ class Master extends Model
         'faskes_id',
         'nama',        // Nama Tahapan
         'deadline',    // Deadline
-        'catatan'      // Catatan
+        'catatan',      // Catatan
+        'file_path',
+        'file_name',
+        'file_original_name',
+        'file_size'
     ];
 
     protected $casts = [

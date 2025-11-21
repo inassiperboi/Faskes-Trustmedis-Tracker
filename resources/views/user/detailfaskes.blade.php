@@ -130,13 +130,17 @@
             <div class="flex items-center">
                 <div class="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full mr-4">
                     <i class="fas fa-user-circle mr-1"></i>
-                    <span>Admin</span>
+                    <span>{{ Auth::user()->name ?? 'User' }}</span>
                 </div>
 
-                <button class="flex items-center px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition duration-300">
-                    <i class="fas fa-sign-out-alt mr-2"></i>
-                    Logout
-                </button>
+                {{-- Updated logout button to use form submission --}}
+                <form action="{{ route('logout') }}" method="POST" class="inline">
+                    @csrf
+                    <button type="submit" class="flex items-center px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition duration-300">
+                        <i class="fas fa-sign-out-alt mr-2"></i>
+                        Logout
+                    </button>
+                </form>
             </div>
         </div>
     </header>
@@ -186,11 +190,7 @@
                                 Tahapan Implementasi
                             </h3>
 
-                            <!-- Tombol untuk membuka modal tambah tahapan -->
-                            <button onclick="toggleModalTahapan()" 
-                                    class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-300 flex items-center">
-                                <i class="fas fa-plus mr-2"></i> Tambah Tahapan
-                            </button>
+                            <!-- Removed the "Tambah Tahapan" button as requested -->
                         </div>
 
                         {{-- LOOP MASTER TAHAPAN --}}
