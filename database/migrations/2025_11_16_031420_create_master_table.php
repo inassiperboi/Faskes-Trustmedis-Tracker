@@ -14,12 +14,9 @@ return new class extends Migration {
                   ->onDelete('cascade')
                   ->onUpdate('cascade');
 
-            $table->string('nama');
-            $table->text('deskripsi')->nullable();
-            $table->date('deadline')->nullable();
-            $table->text('catatan')->nullable();
-            $table->unsignedTinyInteger('progress')->default(0);
-            $table->boolean('completed')->default(false);
+            $table->string('nama');              // 1. Nama Tahapan
+            $table->date('deadline')->nullable(); // 2. Deadline  
+            $table->text('catatan')->nullable();  // 3. Catatan
 
             $table->timestamps();
         });

@@ -1,5 +1,5 @@
 <?php
-// app/Models/SubSection.php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -13,8 +13,7 @@ class SubSection extends Model
         'nama',
         'deadline',
         'catatan',
-        'progress',
-        'completed',
+        'status', // Tambahkan status ke fillable
         'file_path',
         'file_name',
         'file_original_name',
@@ -22,12 +21,29 @@ class SubSection extends Model
     ];
 
     protected $casts = [
-        'deadline' => 'date',
-        'completed' => 'boolean'
+        'deadline' => 'date'
     ];
 
     public function submaster()
     {
         return $this->belongsTo(SubMaster::class, 'sub_master_id');
+    }
+
+    // Helper method untuk menandai sebagai selesai
+    public function markAsCompleted()
+    {
+        $this->update(['status' => 'selesai']);
+    }
+
+    // Helper method untuk menandai sebagai pending
+    public function markAsPending()
+    {
+        $this->update(['status' => 'pending']);
+    }
+
+    // Accessor untuk cek status
+    public function getIsCompletedAttribute()
+    {
+        return $this->status === 'selesai';
     }
 }

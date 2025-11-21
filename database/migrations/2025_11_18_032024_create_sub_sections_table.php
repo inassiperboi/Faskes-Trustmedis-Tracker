@@ -10,12 +10,21 @@ return new class extends Migration
     {
         Schema::create('sub_sections', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('sub_master_id')->constrained('sub_master')->onDelete('cascade');
+            $table->foreignId('sub_master_id')
+                  ->constrained('sub_master')
+                  ->onDelete('cascade');
+            
             $table->string('nama');
             $table->date('deadline')->nullable();
             $table->text('catatan')->nullable();
-            $table->tinyInteger('progress')->default(0);
-            $table->boolean('completed')->default(false);
+            $table->enum('status', ['pending', 'selesai'])->default('pending'); // Kolom status baru
+            
+            // File upload columns
+            $table->string('file_path')->nullable();
+            $table->string('file_name')->nullable();
+            $table->string('file_original_name')->nullable();
+            $table->string('file_size')->nullable();
+            
             $table->timestamps();
         });
     }

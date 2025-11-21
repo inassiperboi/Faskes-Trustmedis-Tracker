@@ -1,5 +1,4 @@
 <?php
-// app/Models/SubMaster.php
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -13,8 +12,7 @@ class SubMaster extends Model
         'nama',
         'deadline',
         'catatan',
-        'progress',
-        'completed',
+        'status', // Ganti progress & completed dengan status
         'file_path',
         'file_name',
         'file_original_name',
@@ -22,8 +20,7 @@ class SubMaster extends Model
     ];
 
     protected $casts = [
-        'deadline' => 'date',
-        'completed' => 'boolean'
+        'deadline' => 'date'
     ];
 
     public function master()
@@ -34,5 +31,23 @@ class SubMaster extends Model
     public function subsections()
     {
         return $this->hasMany(SubSection::class, 'sub_master_id');
+    }
+
+    // Helper method untuk menandai sebagai selesai
+    public function markAsCompleted()
+    {
+        $this->update(['status' => 'selesai']);
+    }
+
+    // Helper method untuk menandai sebagai pending
+    public function markAsPending()
+    {
+        $this->update(['status' => 'pending']);
+    }
+
+    // Accessor untuk cek status
+    public function getIsCompletedAttribute()
+    {
+        return $this->status === 'selesai';
     }
 }

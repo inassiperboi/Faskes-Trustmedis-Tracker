@@ -9,7 +9,6 @@ return new class extends Migration {
     {
         Schema::create('sub_master', function (Blueprint $table) {
             $table->id();
-
             $table->foreignId('master_id')
                   ->constrained('master')
                   ->cascadeOnDelete()
@@ -18,8 +17,13 @@ return new class extends Migration {
             $table->string('nama');
             $table->date('deadline')->nullable();
             $table->text('catatan')->nullable();
-            $table->unsignedTinyInteger('progress')->default(0);
-            $table->boolean('completed')->default(false);
+            $table->enum('status', ['pending', 'selesai'])->default('pending'); // Ganti progress & completed dengan status
+
+            // File upload columns
+            $table->string('file_path')->nullable();
+            $table->string('file_name')->nullable();
+            $table->string('file_original_name')->nullable();
+            $table->string('file_size')->nullable();
 
             $table->timestamps();
         });

@@ -1,5 +1,5 @@
 <?php
-// app/Http/Controllers/SubSectionController.php
+
 namespace App\Http\Controllers;
 
 use App\Models\SubMaster;
@@ -13,11 +13,10 @@ class SubSectionController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'sub_master_id' => 'required|exists:sub_master,id', // PERBAIKAN: sub_masters → sub_master
+            'sub_master_id' => 'required|exists:sub_master,id',
             'nama' => 'required|max:255',
             'deadline' => 'nullable|date',
             'catatan' => 'nullable',
-            'progress' => 'nullable|integer|min:0|max:100',
             'file' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,jpg,jpeg,png,zip,rar|max:10240',
         ]);
 
@@ -40,8 +39,7 @@ class SubSectionController extends Controller
             'nama' => $request->nama,
             'deadline' => $request->deadline,
             'catatan' => $request->catatan,
-            'progress' => $request->progress ?? 0,
-            'completed' => $request->progress == 100 ? 1 : 0, // PERBAIKAN: true → 1, false → 0
+            'status' => 'pending', // Default status
             'file_path' => $filePath,
             'file_name' => $fileName,
             'file_original_name' => $fileOriginalName,
@@ -65,7 +63,6 @@ class SubSectionController extends Controller
             'nama' => 'required|max:255',
             'deadline' => 'nullable|date',
             'catatan' => 'nullable',
-            'progress' => 'nullable|integer|min:0|max:100',
             'file' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,jpg,jpeg,png,zip,rar|max:10240',
         ]);
 
@@ -75,8 +72,7 @@ class SubSectionController extends Controller
             'nama' => $request->nama,
             'deadline' => $request->deadline,
             'catatan' => $request->catatan,
-            'progress' => $request->progress ?? 0,
-            'completed' => $request->progress == 100 ? 1 : 0, // PERBAIKAN: true → 1, false → 0
+            // Status tidak diupdate dari form, hanya dari tombol submit
         ];
 
         // Handle file upload jika ada file baru
@@ -101,6 +97,24 @@ class SubSectionController extends Controller
         $subsection->update($data);
 
         return redirect()->back()->with('success', 'Sub-section berhasil diupdate!');
+    }
+
+    // MARK AS COMPLETED - Fungsi baru untuk tombol submit
+    public function markAsCompleted($id)
+    {
+        $subsection = SubSection::findOrFail($id);
+        $subsection->markAsCompleted();
+
+        return redirect()->back()->with('success', 'Sub-section telah ditandai sebagai selesai!');
+    }
+
+    // MARK AS PENDING - Fungsi baru untuk reset status
+    public function markAsPending($id)
+    {
+        $subsection = SubSection::findOrFail($id);
+        $subsection->markAsPending();
+
+        return redirect()->back()->with('success', 'Sub-section telah ditandai sebagai pending!');
     }
 
     // HAPUS SUB SECTION

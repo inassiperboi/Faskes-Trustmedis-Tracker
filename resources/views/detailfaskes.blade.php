@@ -10,17 +10,6 @@
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
     
     <style>
-        .progress-bar {
-            height: 8px;
-            background-color: #e5e7eb;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        .progress-fill {
-            height: 100%;
-            background-color: #3b82f6;
-            transition: width 0.3s ease;
-        }
         .fade-in {
             animation: fadeIn 0.5s ease-in-out;
         }
@@ -32,15 +21,6 @@
             border-left: 3px solid #e5e7eb;
             padding-left: 1rem;
             margin-left: 1rem;
-        }
-        .hierarchy-item.completed {
-            border-left-color: #10b981;
-        }
-        .hierarchy-item.in-progress {
-            border-left-color: #f59e0b;
-        }
-        .hierarchy-item.not-started {
-            border-left-color: #ef4444;
         }
         .badge {
             display: inline-block;
@@ -132,181 +112,6 @@
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         }
     </style>
-
-    <script>
-        // Modal untuk Tambah Tahapan
-        function toggleModalTahapan() {
-            const modal = document.getElementById('modal-tahapan');
-            modal.classList.toggle('hidden');
-        }
-
-        // Modal untuk Tambah Sub Master
-        function toggleModalSubMaster(masterId) {
-            document.getElementById('submaster_master_id').value = masterId;
-            const modal = document.getElementById('modal-submaster');
-            modal.classList.toggle('hidden');
-        }
-
-        // Modal untuk Tambah Sub Section
-        function toggleModalSubSection(subMasterId) {
-            document.getElementById('subsection_sub_master_id').value = subMasterId;
-            const modal = document.getElementById('modal-subsection');
-            modal.classList.toggle('hidden');
-        }
-
-        // Modal untuk Edit Tahapan
-        function toggleModalEditTahapan(tahapanId, tahapanData = null) {
-            const modal = document.getElementById('modal-edit-tahapan');
-            
-            if (tahapanData) {
-                document.getElementById('edit_tahapan_id').value = tahapanData.id;
-                document.getElementById('edit_nama_tahapan').value = tahapanData.nama;
-                document.getElementById('edit_deskripsi_tahapan').value = tahapanData.deskripsi || '';
-                document.getElementById('edit_deadline_tahapan').value = tahapanData.deadline || '';
-                document.getElementById('edit_catatan_tahapan').value = tahapanData.catatan || '';
-                document.getElementById('edit_progress_tahapan').value = tahapanData.progress || 0;
-                
-                const fileInfo = document.getElementById('current-file-tahapan');
-                if (tahapanData.file_path) {
-                    fileInfo.innerHTML = `
-                        <div class="flex items-center justify-between bg-blue-50 p-3 rounded-lg border border-blue-200">
-                            <div class="flex items-center">
-                                <i class="fas fa-paperclip text-blue-600 mr-3"></i>
-                                <div>
-                                    <div class="text-sm font-medium text-gray-800">${tahapanData.file_original_name}</div>
-                                    <div class="text-xs text-gray-500 mt-1">
-                                        <i class="fas fa-hdd mr-1"></i>${tahapanData.file_size}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="flex space-x-2">
-                                <a href="/download/tahapan/${tahapanData.id}" 
-                                   class="px-3 py-1 bg-blue-600 text-white rounded text-xs flex items-center hover:bg-blue-700">
-                                    <i class="fas fa-download mr-1"></i> Download
-                                </a>
-                                <a href="/preview/tahapan/${tahapanData.id}" 
-                                   target="_blank"
-                                   class="px-3 py-1 bg-green-600 text-white rounded text-xs flex items-center hover:bg-green-700">
-                                    <i class="fas fa-eye mr-1"></i> Preview
-                                </a>
-                            </div>
-                        </div>
-                    `;
-                } else {
-                    fileInfo.innerHTML = '<p class="text-gray-500 text-sm">Tidak ada file</p>';
-                }
-            }
-            
-            modal.classList.toggle('hidden');
-        }
-
-        // Modal untuk Edit SubMaster
-        function toggleModalEditSubMaster(subMasterId, subMasterData = null) {
-            const modal = document.getElementById('modal-edit-submaster');
-            
-            if (subMasterData) {
-                document.getElementById('edit_submaster_id').value = subMasterData.id;
-                document.getElementById('edit_nama_submaster').value = subMasterData.nama;
-                document.getElementById('edit_deadline_submaster').value = subMasterData.deadline || '';
-                document.getElementById('edit_catatan_submaster').value = subMasterData.catatan || '';
-                document.getElementById('edit_progress_submaster').value = subMasterData.progress || 0;
-                
-                const fileInfo = document.getElementById('current-file-submaster');
-                if (subMasterData.file_path) {
-                    fileInfo.innerHTML = `
-                        <div class="flex items-center justify-between bg-green-50 p-2 rounded border border-green-200">
-                            <div class="flex items-center">
-                                <i class="fas fa-paperclip text-green-600 mr-2"></i>
-                                <div>
-                                    <div class="text-xs font-medium text-gray-800">${subMasterData.file_original_name}</div>
-                                    <div class="text-xs text-gray-500">${subMasterData.file_size}</div>
-                                </div>
-                            </div>
-                            <div class="flex space-x-2">
-                                <a href="/download/submaster/${subMasterData.id}" 
-                                   class="px-2 py-1 bg-green-600 text-white rounded text-xs flex items-center hover:bg-green-700">
-                                    <i class="fas fa-download mr-1"></i> Download
-                                </a>
-                                <a href="/preview/submaster/${subMasterData.id}" 
-                                   target="_blank"
-                                   class="px-2 py-1 bg-blue-600 text-white rounded text-xs flex items-center hover:bg-blue-700">
-                                    <i class="fas fa-eye mr-1"></i> Preview
-                                </a>
-                            </div>
-                        </div>
-                    `;
-                } else {
-                    fileInfo.innerHTML = '<p class="text-gray-500 text-xs">Tidak ada file</p>';
-                }
-            }
-            
-            modal.classList.toggle('hidden');
-        }
-
-        // Modal untuk Edit SubSection
-        function toggleModalEditSubSection(subSectionId, subSectionData = null) {
-            const modal = document.getElementById('modal-edit-subsection');
-            
-            if (subSectionData) {
-                document.getElementById('edit_subsection_id').value = subSectionData.id;
-                document.getElementById('edit_nama_subsection').value = subSectionData.nama;
-                document.getElementById('edit_deadline_subsection').value = subSectionData.deadline || '';
-                document.getElementById('edit_catatan_subsection').value = subSectionData.catatan || '';
-                document.getElementById('edit_progress_subsection').value = subSectionData.progress || 0;
-                
-                const fileInfo = document.getElementById('current-file-subsection');
-                if (subSectionData.file_path) {
-                    fileInfo.innerHTML = `
-                        <div class="flex items-center justify-between bg-purple-50 p-2 rounded border border-purple-200">
-                            <div class="flex items-center">
-                                <i class="fas fa-paperclip text-purple-600 mr-2"></i>
-                                <div>
-                                    <div class="text-xs font-medium text-gray-800">${subSectionData.file_original_name}</div>
-                                    <div class="text-xs text-gray-500">${subSectionData.file_size}</div>
-                                </div>
-                            </div>
-                            <div class="flex space-x-2">
-                                <a href="/download/subsection/${subSectionData.id}" 
-                                   class="px-2 py-1 bg-purple-600 text-white rounded text-xs flex items-center hover:bg-purple-700">
-                                    <i class="fas fa-download mr-1"></i> Download
-                                </a>
-                                <a href="/preview/subsection/${subSectionData.id}" 
-                                   target="_blank"
-                                   class="px-2 py-1 bg-blue-600 text-white rounded text-xs flex items-center hover:bg-blue-700">
-                                    <i class="fas fa-eye mr-1"></i> Preview
-                                </a>
-                            </div>
-                        </div>
-                    `;
-                } else {
-                    fileInfo.innerHTML = '<p class="text-gray-500 text-xs">Tidak ada file</p>';
-                }
-            }
-            
-            modal.classList.toggle('hidden');
-        }
-
-        // Set form actions for edit forms
-        document.addEventListener('DOMContentLoaded', function() {
-            const editTahapanForm = document.getElementById('form-edit-tahapan');
-            editTahapanForm.addEventListener('submit', function(e) {
-                const id = document.getElementById('edit_tahapan_id').value;
-                this.action = `/tahapan/${id}/update`;
-            });
-
-            const editSubMasterForm = document.getElementById('form-edit-submaster');
-            editSubMasterForm.addEventListener('submit', function(e) {
-                const id = document.getElementById('edit_submaster_id').value;
-                this.action = `/submaster/${id}/update`;
-            });
-
-            const editSubSectionForm = document.getElementById('form-edit-subsection');
-            editSubSectionForm.addEventListener('submit', function(e) {
-                const id = document.getElementById('edit_subsection_id').value;
-                this.action = `/subsection/${id}/update`;
-            });
-        });
-    </script>
 </head>
 
 <body class="bg-gray-100 text-gray-800">
@@ -370,12 +175,6 @@
                                 Tim:
                                 <span class="ml-1 font-semibold">{{ $faskes->tim ?? '-' }}</span>
                             </div>
-
-                            <div class="flex items-center">
-                                <i class="fas fa-chart-line text-purple-600 mr-2"></i>
-                                Progress:
-                                <span class="ml-1 font-semibold">{{ $faskes->progress }}%</span>
-                            </div>
                         </div>
                     </div>
 
@@ -396,25 +195,14 @@
 
                         {{-- LOOP MASTER TAHAPAN --}}
                         @forelse ($faskes->tahapan as $tahap)
-                        <div class="hierarchy-item 
-                            @if($tahap->progress == 100) completed
-                            @elseif($tahap->progress > 0) in-progress  
-                            @else not-started @endif p-4 rounded-lg border bg-white mb-4">
+                        <div class="hierarchy-item p-4 rounded-lg border bg-white mb-4 fade-in">
 
                             <div class="flex justify-between items-start">
                                 <div class="flex-1">
                                     <div class="flex items-center">
-                                        <i class="fas fa-tasks mr-2 
-                                            @if($tahap->progress == 100) text-green-500
-                                            @elseif($tahap->progress > 0) text-yellow-500 
-                                            @else text-red-500 @endif">
-                                        </i>
+                                        <i class="fas fa-tasks text-blue-500 mr-2"></i>
                                         <h3 class="font-semibold text-lg">{{ $tahap->nama }}</h3>
                                     </div>
-
-                                    @if($tahap->deskripsi)
-                                    <p class="text-sm text-gray-600 mt-1">{{ $tahap->deskripsi }}</p>
-                                    @endif
 
                                     @if($tahap->deadline)
                                     <div class="mt-2 flex items-center text-sm text-gray-500">
@@ -423,44 +211,9 @@
                                     </div>
                                     @endif
 
-                                    <div class="mt-3">
-                                        <div class="flex justify-between text-sm mb-1">
-                                            <span>Progress</span>
-                                            <span>{{ $tahap->progress }}%</span>
-                                        </div>
-                                        <div class="progress-bar">
-                                            <div class="progress-fill" style="width: {{ $tahap->progress }}%"></div>
-                                        </div>
-                                    </div>
-
-                                    {{-- TAMPILKAN FILE UPLOAD TAHAPAN DI SINI --}}
-                                    @if($tahap->file_path)
-                                    <div class="mt-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                                        <div class="flex items-center justify-between">
-                                            <div class="flex items-center">
-                                                <i class="fas fa-paperclip text-blue-600 mr-3"></i>
-                                                <div>
-                                                    <div class="text-sm font-medium text-gray-800">{{ $tahap->file_original_name }}</div>
-                                                    <div class="text-xs text-gray-500 mt-1">
-                                                        <i class="fas fa-hdd mr-1"></i>{{ $tahap->file_size }}
-                                                        <span class="mx-2">•</span>
-                                                        <i class="fas fa-calendar mr-1"></i>
-                                                        {{ \Carbon\Carbon::parse($tahap->created_at)->format('d/m/Y H:i') }}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="flex space-x-2">
-                                                <a href="{{ route('download.file', ['type' => 'tahapan', 'id' => $tahap->id]) }}" 
-                                                   class="px-3 py-2 bg-blue-600 text-white rounded text-sm flex items-center hover:bg-blue-700 transition duration-300">
-                                                    <i class="fas fa-download mr-2"></i> Download
-                                                </a>
-                                                <a href="{{ route('preview.file', ['type' => 'tahapan', 'id' => $tahap->id]) }}" 
-                                                   target="_blank" 
-                                                   class="px-3 py-2 bg-green-600 text-white rounded text-sm flex items-center hover:bg-green-700 transition duration-300">
-                                                    <i class="fas fa-eye mr-2"></i> Preview
-                                                </a>
-                                            </div>
-                                        </div>
+                                    @if($tahap->catatan)
+                                    <div class="mt-2">
+                                        <p class="text-sm text-gray-600"><strong>Catatan:</strong> {{ $tahap->catatan }}</p>
                                     </div>
                                     @endif
                                 </div>
@@ -475,13 +228,8 @@
                                     <button onclick="toggleModalEditTahapan({{ $tahap->id }}, { 
                                         id: {{ $tahap->id }}, 
                                         nama: '{{ addslashes($tahap->nama) }}', 
-                                        deskripsi: '{{ addslashes($tahap->deskripsi ?? '') }}', 
                                         deadline: '{{ $tahap->deadline ? $tahap->deadline->format('Y-m-d') : '' }}', 
-                                        catatan: '{{ addslashes($tahap->catatan ?? '') }}', 
-                                        progress: {{ $tahap->progress }},
-                                        file_path: '{{ $tahap->file_path }}',
-                                        file_original_name: '{{ addslashes($tahap->file_original_name ?? '') }}',
-                                        file_size: '{{ addslashes($tahap->file_size ?? '') }}'
+                                        catatan: '{{ addslashes($tahap->catatan ?? '') }}'
                                     })" class="px-3 py-1 bg-yellow-500 text-white rounded text-sm flex items-center hover:bg-yellow-600">
                                         <i class="fas fa-edit mr-1"></i> Edit
                                     </button>
@@ -501,21 +249,25 @@
                             {{-- LOOP SUB MASTERS --}}
                             <div class="mt-4 space-y-3">
                                 @forelse ($tahap->submasters as $submaster)
-                                <div class="hierarchy-item 
-                                    @if($submaster->progress == 100) completed
-                                    @elseif($submaster->progress > 0) in-progress  
-                                    @else not-started @endif p-3 rounded border">
+                                <div class="hierarchy-item p-3 rounded border">
 
                                     <div class="flex justify-between items-start">
                                         <div class="flex-1">
                                             <div class="flex items-center">
                                                 <i class="fas fa-th-list mr-2 
-                                                    @if($submaster->progress == 100) text-green-500
-                                                    @elseif($submaster->progress > 0) text-yellow-500 
+                                                    @if($submaster->status == 'selesai') text-green-500
                                                     @else text-red-500 @endif">
                                                 </i>
                                                 <h4 class="font-medium">{{ $submaster->nama }}</h4>
                                                 <span class="badge badge-submaster ml-2">sub-master</span>
+                                                
+                                                <!-- Status Badge untuk SubMaster -->
+                                                <span class="ml-2 text-xs font-medium px-2 py-1 rounded-full 
+                                                    @if($submaster->status == 'selesai') bg-green-100 text-green-800
+                                                    @else bg-yellow-100 text-yellow-800 @endif">
+                                                    <i class="fas fa-circle mr-1" style="font-size: 0.5rem;"></i>
+                                                    {{ $submaster->status == 'selesai' ? 'Selesai' : 'Pending' }}
+                                                </span>
                                             </div>
 
                                             @if($submaster->deadline)
@@ -525,15 +277,11 @@
                                             </div>
                                             @endif
 
+                                            @if($submaster->catatan)
                                             <div class="mt-2">
-                                                <div class="flex justify-between text-xs mb-1">
-                                                    <span>Progress</span>
-                                                    <span>{{ $submaster->progress }}%</span>
-                                                </div>
-                                                <div class="progress-bar">
-                                                    <div class="progress-fill" style="width: {{ $submaster->progress }}%"></div>
-                                                </div>
+                                                <p class="text-sm text-gray-600"><strong>Catatan:</strong> {{ $submaster->catatan }}</p>
                                             </div>
+                                            @endif
 
                                             {{-- TAMPILKAN FILE UPLOAD SUBMASTER DI SINI --}}
                                             @if($submaster->file_path)
@@ -576,8 +324,7 @@
                                                 id: {{ $submaster->id }}, 
                                                 nama: '{{ addslashes($submaster->nama) }}', 
                                                 deadline: '{{ $submaster->deadline ? $submaster->deadline->format('Y-m-d') : '' }}', 
-                                                catatan: '{{ addslashes($submaster->catatan ?? '') }}', 
-                                                progress: {{ $submaster->progress }},
+                                                catatan: '{{ addslashes($submaster->catatan ?? '') }}',
                                                 file_path: '{{ $submaster->file_path }}',
                                                 file_original_name: '{{ addslashes($submaster->file_original_name ?? '') }}',
                                                 file_size: '{{ addslashes($submaster->file_size ?? '') }}'
@@ -585,6 +332,27 @@
                                                 <i class="fas fa-edit mr-1"></i> Edit
                                             </button>
                                             
+                                            <!-- TOMBOL STATUS SUBMASTER -->
+                                            @if($submaster->status == 'pending')
+                                            <form action="{{ route('submaster.complete', $submaster->id) }}" method="POST" class="inline">
+                                                @csrf @method('PATCH')
+                                                <button type="submit" 
+                                                        class="px-2 py-1 bg-green-600 text-white rounded text-xs flex items-center hover:bg-green-700 w-full"
+                                                        onclick="return confirm('Tandai sub-master {{ $submaster->nama }} sebagai selesai?')">
+                                                    <i class="fas fa-check mr-1"></i> Submit
+                                                </button>
+                                            </form>
+                                            @else
+                                            <form action="{{ route('submaster.pending', $submaster->id) }}" method="POST" class="inline">
+                                                @csrf @method('PATCH')
+                                                <button type="submit" 
+                                                        class="px-2 py-1 bg-yellow-600 text-white rounded text-xs flex items-center hover:bg-yellow-700 w-full"
+                                                        onclick="return confirm('Kembalikan status {{ $submaster->nama }} menjadi pending?')">
+                                                    <i class="fas fa-undo mr-1"></i> Batal Submit
+                                                </button>
+                                            </form>
+                                            @endif
+
                                             <!-- TOMBOL HAPUS SUBMASTER -->
                                             <form action="{{ route('submaster.destroy', $submaster->id) }}" method="POST" class="inline">
                                                 @csrf @method('DELETE')
@@ -600,17 +368,13 @@
                                     {{-- LOOP SUB SECTIONS --}}
                                     <div class="mt-3 space-y-2">
                                         @forelse ($submaster->subsections as $subsection)
-                                        <div class="hierarchy-item 
-                                            @if($subsection->progress == 100) completed
-                                            @elseif($subsection->progress > 0) in-progress  
-                                            @else not-started @endif p-2 rounded border bg-gray-50">
+                                        <div class="hierarchy-item p-2 rounded border bg-gray-50">
 
                                             <div class="flex justify-between items-start">
                                                 <div class="flex-1">
                                                     <div class="flex items-center">
                                                         <i class="fas fa-circle mr-2 
-                                                            @if($subsection->progress == 100) text-green-500
-                                                            @elseif($subsection->progress > 0) text-yellow-500 
+                                                            @if($subsection->status == 'selesai') text-green-500
                                                             @else text-red-500 @endif" style="font-size: 0.5rem;">
                                                         </i>
                                                         <h5 class="font-medium text-sm">{{ $subsection->nama }}</h5>
@@ -624,15 +388,12 @@
                                                     </div>
                                                     @endif
 
-                                                    <div class="mt-2">
-                                                        <div class="flex justify-between text-xs mb-1">
-                                                            <span>Progress</span>
-                                                            <span>{{ $subsection->progress }}%</span>
-                                                        </div>
-                                                        <div class="progress-bar">
-                                                            <div class="progress-fill" style="width: {{ $subsection->progress }}%"></div>
-                                                        </div>
+                                                    {{-- TAMPILKAN CATATAN SUBSECTION DI SINI --}}
+                                                    @if($subsection->catatan)
+                                                    <div class="mt-1">
+                                                        <p class="text-xs text-gray-600"><strong>Catatan:</strong> {{ $subsection->catatan }}</p>
                                                     </div>
+                                                    @endif
 
                                                     {{-- TAMPILKAN FILE UPLOAD SUBSECTION DI SINI --}}
                                                     @if($subsection->file_path)
@@ -671,7 +432,6 @@
                                                         nama: '{{ addslashes($subsection->nama) }}', 
                                                         deadline: '{{ $subsection->deadline ? $subsection->deadline->format('Y-m-d') : '' }}', 
                                                         catatan: '{{ addslashes($subsection->catatan ?? '') }}', 
-                                                        progress: {{ $subsection->progress }},
                                                         file_path: '{{ $subsection->file_path }}',
                                                         file_original_name: '{{ addslashes($subsection->file_original_name ?? '') }}',
                                                         file_size: '{{ addslashes($subsection->file_size ?? '') }}'
@@ -679,6 +439,37 @@
                                                         <i class="fas fa-edit mr-0.5"></i> Edit
                                                     </button>
                                                     
+                                                    <!-- TOMBOL SUBMIT SUBSECTION -->
+                                                    @if($subsection->status == 'pending')
+                                                    <form action="{{ route('subsection.complete', $subsection->id) }}" method="POST" class="inline">
+                                                        @csrf @method('PATCH')
+                                                        <button type="submit" 
+                                                                class="px-1 py-0.5 bg-green-600 text-white rounded text-xs flex items-center hover:bg-green-700 w-full mb-1"
+                                                                onclick="return confirm('Tandai sub-section {{ $subsection->nama }} sebagai selesai?')">
+                                                            <i class="fas fa-check mr-0.5"></i> Submit
+                                                        </button>
+                                                    </form>
+                                                    @else
+                                                    <form action="{{ route('subsection.pending', $subsection->id) }}" method="POST" class="inline">
+                                                        @csrf @method('PATCH')
+                                                        <button type="submit" 
+                                                                class="px-1 py-0.5 bg-yellow-600 text-white rounded text-xs flex items-center hover:bg-yellow-700 w-full mb-1"
+                                                                onclick="return confirm('Kembalikan status {{ $subsection->nama }} menjadi pending?')">
+                                                            <i class="fas fa-undo mr-0.5"></i> Batal Submit
+                                                        </button>
+                                                    </form>
+                                                    @endif
+
+                                                    <!-- Tampilkan status -->
+                                                    <div class="mt-1">
+                                                        <span class="text-xs font-medium px-2 py-1 rounded-full 
+                                                            @if($subsection->status == 'selesai') bg-green-100 text-green-800
+                                                            @else bg-yellow-100 text-yellow-800 @endif">
+                                                            <i class="fas fa-circle mr-1" style="font-size: 0.5rem;"></i>
+                                                            {{ $subsection->status == 'selesai' ? 'Selesai' : 'Pending' }}
+                                                        </span>
+                                                    </div>
+
                                                     <!-- TOMBOL HAPUS SUBSECTION -->
                                                     <form action="{{ route('subsection.destroy', $subsection->id) }}" method="POST" class="inline">
                                                         @csrf @method('DELETE')
@@ -793,49 +584,17 @@
         </div>
         
         <div class="p-6 overflow-y-auto flex-1">
-            <form action="{{ route('tahapan.store', $faskes->id) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('tahapan.store', $faskes->id) }}" method="POST">
                 @csrf
 
-                <label class="block mb-2">Nama Tahapan</label>
+                <label class="block mb-2 font-medium">Nama Tahapan *</label>
                 <input type="text" name="nama" placeholder="Contoh: Pembentukan Tim" class="w-full border p-2 rounded mb-4" required>
 
-                <label class="block mb-2">Deskripsi</label>
-                <textarea name="deskripsi" placeholder="Deskripsi tahapan implementasi" class="w-full border p-2 rounded mb-4"></textarea>
-
-                <label class="block mb-2">Deadline</label>
+                <label class="block mb-2 font-medium">Deadline</label>
                 <input type="date" name="deadline" class="w-full border p-2 rounded mb-4">
 
-                <label class="block mb-2">Catatan</label>
-                <textarea name="catatan" placeholder="Catatan tambahan" class="w-full border p-2 rounded mb-4"></textarea>
-
-                <label class="block mb-2">Progress (%)</label>
-                <input type="number" name="progress" min="0" max="100" placeholder="0" class="w-full border p-2 rounded mb-4">
-
-                <!-- File Upload Section untuk TAHAPAN -->
-                <div class="mb-4">
-                    <label class="block mb-2 font-medium text-gray-700">Upload File Submit</label>
-                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-blue-400 transition duration-300">
-                        <input type="file" name="file" id="file-tahapan" class="hidden" 
-                               accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.zip,.rar">
-                        <label for="file-tahapan" class="cursor-pointer block">
-                            <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
-                            <p class="text-sm text-gray-600">Klik untuk upload file submit</p>
-                            <p class="text-xs text-gray-400 mt-1">PDF, DOC, Excel, PPT, JPG, PNG, ZIP, RAR (max: 10MB)</p>
-                        </label>
-                        <div id="file-info-tahapan" class="mt-2 hidden">
-                            <div class="flex items-center justify-between bg-green-50 p-2 rounded">
-                                <div class="flex items-center">
-                                    <i class="fas fa-file text-green-500 mr-2"></i>
-                                    <span id="file-name-tahapan" class="text-sm font-medium"></span>
-                                    <span id="file-size-tahapan" class="text-xs text-gray-500 ml-2"></span>
-                                </div>
-                                <button type="button" onclick="removeFile('tahapan')" class="text-red-500 hover:text-red-700">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <label class="block mb-2 font-medium">Catatan</label>
+                <textarea name="catatan" placeholder="Catatan tambahan" class="w-full border p-2 rounded mb-4" rows="4"></textarea>
 
                 <div class="flex justify-end space-x-2 pt-4 border-t border-gray-200 mt-4 flex-shrink-0">
                     <button type="button" onclick="toggleModalTahapan()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">
@@ -863,17 +622,14 @@
                 @csrf
                 <input type="hidden" name="master_id" id="submaster_master_id">
 
-                <label class="block mb-2">Nama sub-master *</label>
+                <label class="block mb-2 font-medium">Nama sub-master *</label>
                 <input type="text" name="nama" placeholder="Contoh: Penyusunan Dokumen" class="w-full border p-2 rounded mb-4" required>
 
-                <label class="block mb-2">Deadline</label>
+                <label class="block mb-2 font-medium">Deadline</label>
                 <input type="date" name="deadline" class="w-full border p-2 rounded mb-4">
 
-                <label class="block mb-2">Catatan</label>
+                <label class="block mb-2 font-medium">Catatan</label>
                 <textarea name="catatan" placeholder="Catatan tambahan" class="w-full border p-2 rounded mb-4" rows="3"></textarea>
-
-                <label class="block mb-2">Progress (%)</label>
-                <input type="number" name="progress" min="0" max="100" value="0" class="w-full border p-2 rounded mb-4">
 
                 <!-- File Upload Section untuk SUBMASTER -->
                 <div class="mb-4">
@@ -927,17 +683,14 @@
                 @csrf
                 <input type="hidden" name="sub_master_id" id="subsection_sub_master_id">
 
-                <label class="block mb-2">Nama Sub-section *</label>
+                <label class="block mb-2 font-medium">Nama Sub-section *</label>
                 <input type="text" name="nama" placeholder="Contoh: Analisis Kebutuhan" class="w-full border p-2 rounded mb-4" required>
 
-                <label class="block mb-2">Deadline</label>
+                <label class="block mb-2 font-medium">Deadline</label>
                 <input type="date" name="deadline" class="w-full border p-2 rounded mb-4">
 
-                <label class="block mb-2">Catatan</label>
+                <label class="block mb-2 font-medium">Catatan</label>
                 <textarea name="catatan" placeholder="Catatan tambahan" class="w-full border p-2 rounded mb-4" rows="3"></textarea>
-
-                <label class="block mb-2">Progress (%)</label>
-                <input type="number" name="progress" min="0" max="100" value="0" class="w-full border p-2 rounded mb-4">
 
                 <!-- File Upload Section untuk SUBSECTION -->
                 <div class="mb-4">
@@ -987,41 +740,18 @@
         </div>
         
         <div class="p-6 overflow-y-auto flex-1">
-            <form id="form-edit-tahapan" action="" method="POST" enctype="multipart/form-data">
+            <form id="form-edit-tahapan" action="" method="POST">
                 @csrf @method('PUT')
                 <input type="hidden" name="id" id="edit_tahapan_id">
 
-                <label class="block mb-2">Nama Tahapan</label>
+                <label class="block mb-2 font-medium">Nama Tahapan</label>
                 <input type="text" name="nama" id="edit_nama_tahapan" class="w-full border p-2 rounded mb-4" required>
 
-                <label class="block mb-2">Deskripsi</label>
-                <textarea name="deskripsi" id="edit_deskripsi_tahapan" class="w-full border p-2 rounded mb-4"></textarea>
-
-                <label class="block mb-2">Deadline</label>
+                <label class="block mb-2 font-medium">Deadline</label>
                 <input type="date" name="deadline" id="edit_deadline_tahapan" class="w-full border p-2 rounded mb-4">
 
-                <label class="block mb-2">Catatan</label>
-                <textarea name="catatan" id="edit_catatan_tahapan" class="w-full border p-2 rounded mb-4"></textarea>
-
-                <label class="block mb-2">Progress (%)</label>
-                <input type="number" name="progress" id="edit_progress_tahapan" min="0" max="100" class="w-full border p-2 rounded mb-4">
-
-                <!-- Current File Info -->
-                <div class="mb-4">
-                    <label class="block mb-2 font-medium text-gray-700">File Saat Ini</label>
-                    <div id="current-file-tahapan" class="text-gray-500 text-sm">
-                        <!-- File info akan diisi oleh JavaScript -->
-                    </div>
-                </div>
-
-                <!-- New File Upload -->
-                <div class="mb-4">
-                    <label class="block mb-2 font-medium text-gray-700">Upload File Baru (opsional)</label>
-                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-blue-400 transition duration-300">
-                        <input type="file" name="file" class="w-full">
-                        <p class="text-xs text-gray-400 mt-1">PDF, DOC, Excel, PPT, JPG, PNG, ZIP, RAR (max: 10MB)</p>
-                    </div>
-                </div>
+                <label class="block mb-2 font-medium">Catatan</label>
+                <textarea name="catatan" id="edit_catatan_tahapan" class="w-full border p-2 rounded mb-4" rows="4"></textarea>
 
                 <div class="flex justify-end space-x-2 pt-4 border-t border-gray-200 mt-4">
                     <button type="button" onclick="toggleModalEditTahapan()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">
@@ -1049,17 +779,14 @@
                 @csrf @method('PUT')
                 <input type="hidden" name="id" id="edit_submaster_id">
 
-                <label class="block mb-2">Nama Sub-Master</label>
+                <label class="block mb-2 font-medium">Nama Sub-Master</label>
                 <input type="text" name="nama" id="edit_nama_submaster" class="w-full border p-2 rounded mb-4" required>
 
-                <label class="block mb-2">Deadline</label>
+                <label class="block mb-2 font-medium">Deadline</label>
                 <input type="date" name="deadline" id="edit_deadline_submaster" class="w-full border p-2 rounded mb-4">
 
-                <label class="block mb-2">Catatan</label>
+                <label class="block mb-2 font-medium">Catatan</label>
                 <textarea name="catatan" id="edit_catatan_submaster" class="w-full border p-2 rounded mb-4" rows="3"></textarea>
-
-                <label class="block mb-2">Progress (%)</label>
-                <input type="number" name="progress" id="edit_progress_submaster" min="0" max="100" class="w-full border p-2 rounded mb-4">
 
                 <!-- Current File Info -->
                 <div class="mb-4">
@@ -1104,17 +831,14 @@
                 @csrf @method('PUT')
                 <input type="hidden" name="id" id="edit_subsection_id">
 
-                <label class="block mb-2">Nama Sub-Section</label>
+                <label class="block mb-2 font-medium">Nama Sub-Section</label>
                 <input type="text" name="nama" id="edit_nama_subsection" class="w-full border p-2 rounded mb-4" required>
 
-                <label class="block mb-2">Deadline</label>
+                <label class="block mb-2 font-medium">Deadline</label>
                 <input type="date" name="deadline" id="edit_deadline_subsection" class="w-full border p-2 rounded mb-4">
 
-                <label class="block mb-2">Catatan</label>
+                <label class="block mb-2 font-medium">Catatan</label>
                 <textarea name="catatan" id="edit_catatan_subsection" class="w-full border p-2 rounded mb-4" rows="3"></textarea>
-
-                <label class="block mb-2">Progress (%)</label>
-                <input type="number" name="progress" id="edit_progress_subsection" min="0" max="100" class="w-full border p-2 rounded mb-4">
 
                 <!-- Current File Info -->
                 <div class="mb-4">
@@ -1151,50 +875,184 @@
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/id.js"></script>
     
     <script>
+        // Modal untuk Tambah Tahapan
+        function toggleModalTahapan() {
+            const modal = document.getElementById('modal-tahapan');
+            modal.classList.toggle('hidden');
+        }
+
+        // Modal untuk Tambah Sub Master
+        function toggleModalSubMaster(masterId) {
+            document.getElementById('submaster_master_id').value = masterId;
+            const modal = document.getElementById('modal-submaster');
+            modal.classList.toggle('hidden');
+        }
+
+        // Modal untuk Tambah Sub Section
+        function toggleModalSubSection(subMasterId) {
+            document.getElementById('subsection_sub_master_id').value = subMasterId;
+            const modal = document.getElementById('modal-subsection');
+            modal.classList.toggle('hidden');
+        }
+
+        // Modal untuk Edit Tahapan
+        function toggleModalEditTahapan(tahapanId, tahapanData = null) {
+            const modal = document.getElementById('modal-edit-tahapan');
+            
+            if (tahapanData) {
+                document.getElementById('edit_tahapan_id').value = tahapanData.id;
+                document.getElementById('edit_nama_tahapan').value = tahapanData.nama;
+                document.getElementById('edit_deadline_tahapan').value = tahapanData.deadline || '';
+                document.getElementById('edit_catatan_tahapan').value = tahapanData.catatan || '';
+                
+                // Set form action secara langsung - FIXED
+                document.getElementById('form-edit-tahapan').action = `/tahapan/${tahapanData.id}`;
+            }
+            
+            modal.classList.toggle('hidden');
+        }
+
+        // Modal untuk Edit SubMaster
+        function toggleModalEditSubMaster(subMasterId, subMasterData = null) {
+            const modal = document.getElementById('modal-edit-submaster');
+            
+            if (subMasterData) {
+                document.getElementById('edit_submaster_id').value = subMasterData.id;
+                document.getElementById('edit_nama_submaster').value = subMasterData.nama;
+                document.getElementById('edit_deadline_submaster').value = subMasterData.deadline || '';
+                document.getElementById('edit_catatan_submaster').value = subMasterData.catatan || '';
+                
+                // Set form action secara langsung - FIXED
+                document.getElementById('form-edit-submaster').action = `/submaster/${subMasterData.id}`;
+                
+                const fileInfo = document.getElementById('current-file-submaster');
+                if (subMasterData.file_path) {
+                    fileInfo.innerHTML = `
+                        <div class="flex items-center justify-between bg-green-50 p-2 rounded border border-green-200">
+                            <div class="flex items-center">
+                                <i class="fas fa-paperclip text-green-600 mr-2"></i>
+                                <div>
+                                    <div class="text-xs font-medium text-gray-800">${subMasterData.file_original_name}</div>
+                                    <div class="text-xs text-gray-500">${subMasterData.file_size}</div>
+                                </div>
+                            </div>
+                            <div class="flex space-x-2">
+                                <a href="/download/submaster/${subMasterData.id}" 
+                                   class="px-2 py-1 bg-green-600 text-white rounded text-xs flex items-center hover:bg-green-700">
+                                    <i class="fas fa-download mr-1"></i> Download
+                                </a>
+                                <a href="/preview/submaster/${subMasterData.id}" 
+                                   target="_blank"
+                                   class="px-2 py-1 bg-blue-600 text-white rounded text-xs flex items-center hover:bg-blue-700">
+                                    <i class="fas fa-eye mr-1"></i> Preview
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    fileInfo.innerHTML = '<p class="text-gray-500 text-xs">Tidak ada file</p>';
+                }
+            }
+            
+            modal.classList.toggle('hidden');
+        }
+
+        // Modal untuk Edit SubSection
+        function toggleModalEditSubSection(subSectionId, subSectionData = null) {
+            const modal = document.getElementById('modal-edit-subsection');
+            
+            if (subSectionData) {
+                document.getElementById('edit_subsection_id').value = subSectionData.id;
+                document.getElementById('edit_nama_subsection').value = subSectionData.nama;
+                document.getElementById('edit_deadline_subsection').value = subSectionData.deadline || '';
+                document.getElementById('edit_catatan_subsection').value = subSectionData.catatan || '';
+                
+                // Set form action secara langsung - FIXED
+                document.getElementById('form-edit-subsection').action = `/subsection/${subSectionData.id}`;
+                
+                const fileInfo = document.getElementById('current-file-subsection');
+                if (subSectionData.file_path) {
+                    fileInfo.innerHTML = `
+                        <div class="flex items-center justify-between bg-purple-50 p-2 rounded border border-purple-200">
+                            <div class="flex items-center">
+                                <i class="fas fa-paperclip text-purple-600 mr-2"></i>
+                                <div>
+                                    <div class="text-xs font-medium text-gray-800">${subSectionData.file_original_name}</div>
+                                    <div class="text-xs text-gray-500">${subSectionData.file_size}</div>
+                                </div>
+                            </div>
+                            <div class="flex space-x-2">
+                                <a href="/download/subsection/${subSectionData.id}" 
+                                   class="px-2 py-1 bg-purple-600 text-white rounded text-xs flex items-center hover:bg-purple-700">
+                                    <i class="fas fa-download mr-1"></i> Download
+                                </a>
+                                <a href="/preview/subsection/${subSectionData.id}" 
+                                   target="_blank"
+                                   class="px-2 py-1 bg-blue-600 text-white rounded text-xs flex items-center hover:bg-blue-700">
+                                    <i class="fas fa-eye mr-1"></i> Preview
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    fileInfo.innerHTML = '<p class="text-gray-500 text-xs">Tidak ada file</p>';
+                }
+            }
+            
+            modal.classList.toggle('hidden');
+        }
+
+        // Calendar initialization
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar-mini');
             
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                locale: 'id',
-                headerToolbar: {
-                    left: 'prev,next',
-                    center: 'title',
-                    right: ''
-                },
-                height: 'auto',
-                contentHeight: 'auto',
-                events: '{{ route("calendar.events") }}',
-                eventClick: function(info) {
-                    if (info.event.url) {
-                        window.location.href = info.event.url;
+            if (calendarEl) {
+                var calendar = new FullCalendar.Calendar(calendarEl, {
+                    initialView: 'dayGridMonth',
+                    locale: 'id',
+                    headerToolbar: {
+                        left: 'prev,next',
+                        center: 'title',
+                        right: ''
+                    },
+                    height: 'auto',
+                    contentHeight: 'auto',
+                    events: '{{ route("calendar.events") }}',
+                    eventClick: function(info) {
+                        if (info.event.url) {
+                            window.location.href = info.event.url;
+                        }
+                    },
+                    eventDidMount: function(info) {
+                        // Tambahkan tooltip
+                        info.el.title = info.event.title;
+                        
+                        // Highlight deadline yang mendekati (kurang dari 3 hari)
+                        const eventDate = new Date(info.event.start);
+                        const today = new Date();
+                        const diffTime = eventDate - today;
+                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                        
+                        if (diffDays <= 3 && diffDays >= 0) {
+                            info.el.style.backgroundColor = '#ef4444';
+                            info.el.style.borderColor = '#ef4444';
+                            info.el.style.color = 'white';
+                        }
+                    },
+                    dayMaxEvents: 2,
+                    eventTimeFormat: {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        meridiem: false
                     }
-                },
-                eventDidMount: function(info) {
-                    // Tambahkan tooltip
-                    info.el.title = info.event.title;
-                    
-                    // Highlight deadline yang mendekati (kurang dari 3 hari)
-                    const eventDate = new Date(info.event.start);
-                    const today = new Date();
-                    const diffTime = eventDate - today;
-                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                    
-                    if (diffDays <= 3 && diffDays >= 0) {
-                        info.el.style.backgroundColor = '#ef4444';
-                        info.el.style.borderColor = '#ef4444';
-                        info.el.style.color = 'white';
-                    }
-                },
-                dayMaxEvents: 2, // Limit events per day untuk tampilan mini
-                eventTimeFormat: {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    meridiem: false
-                }
-            });
-            
-            calendar.render();
+                });
+                
+                calendar.render();
+            }
+
+            // Initialize file upload handlers
+            handleFileUpload('submaster');
+            handleFileUpload('subsection');
         });
 
         // Function untuk handle file upload preview
@@ -1204,14 +1062,16 @@
             const fileName = document.getElementById(`file-name-${type}`);
             const fileSize = document.getElementById(`file-size-${type}`);
             
-            fileInput.addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    fileName.textContent = file.name;
-                    fileSize.textContent = formatFileSize(file.size);
-                    fileInfo.classList.remove('hidden');
-                }
-            });
+            if (fileInput && fileInfo && fileName && fileSize) {
+                fileInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        fileName.textContent = file.name;
+                        fileSize.textContent = formatFileSize(file.size);
+                        fileInfo.classList.remove('hidden');
+                    }
+                });
+            }
         }
 
         // Function untuk remove file
@@ -1219,8 +1079,10 @@
             const fileInput = document.getElementById(`file-${type}`);
             const fileInfo = document.getElementById(`file-info-${type}`);
             
-            fileInput.value = '';
-            fileInfo.classList.add('hidden');
+            if (fileInput && fileInfo) {
+                fileInput.value = '';
+                fileInfo.classList.add('hidden');
+            }
         }
 
         // Function untuk format file size
@@ -1235,13 +1097,6 @@
                 return bytes + ' bytes';
             }
         }
-
-        // Initialize file upload handlers
-        document.addEventListener('DOMContentLoaded', function() {
-            handleFileUpload('tahapan');
-            handleFileUpload('submaster');
-            handleFileUpload('subsection');
-        });
     </script>
 </body>
 </html>

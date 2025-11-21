@@ -1,5 +1,5 @@
 <?php
-// app/Models/Master.php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -10,21 +10,13 @@ class Master extends Model
 
     protected $fillable = [
         'faskes_id',
-        'nama',
-        'deskripsi',
-        'deadline',
-        'catatan',
-        'progress',
-        'completed',
-        'file_path',
-        'file_name',
-        'file_original_name',
-        'file_size'
+        'nama',        // Nama Tahapan
+        'deadline',    // Deadline
+        'catatan'      // Catatan
     ];
 
     protected $casts = [
-        'deadline' => 'date',
-        'completed' => 'boolean'
+        'deadline' => 'date'
     ];
 
     public function faskes()
