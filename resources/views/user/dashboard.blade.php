@@ -18,7 +18,6 @@
         }
         .progress-fill {
             height: 100%;
-            background-color: #3b82f6;
             transition: width 0.3s ease;
         }
         .fade-in {
@@ -237,13 +236,36 @@
                                         </div>
 
                                         <div class="mt-5">
+                                            <!-- Ganti progress manual dengan perhitungan otomatis dari status submit sub_master dan sub_section -->
                                             <div class="flex justify-between text-sm mb-2">
                                                 <span class="font-medium text-gray-700">Progress</span>
-                                                <span class="font-semibold text-blue-600">{{ $item->progress }}%</span>
+                                                <span class="font-semibold 
+                                                    @if($item->progress_percentage < 50) text-orange-600
+                                                    @elseif($item->progress_percentage < 100) text-blue-600
+                                                    @else text-green-600
+                                                    @endif">
+                                                    {{ number_format($item->progress_percentage, 1) }}%
+                                                </span>
                                             </div>
 
                                             <div class="progress-bar">
-                                                <div class="progress-fill" style="width: {{ $item->progress }}%"></div>
+                                                <div class="progress-fill 
+                                                    @if($item->progress_percentage < 50) bg-orange-500
+                                                    @elseif($item->progress_percentage < 100) bg-blue-500
+                                                    @else bg-green-500
+                                                    @endif" 
+                                                    style="width: {{ $item->progress_percentage }}%">
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Tampilkan detail hitungan progress -->
+                                            @php
+                                                $totalItems = $item->getTotalProgressItems();
+                                                $completedItems = $item->getCompletedProgressItems();
+                                            @endphp
+                                            <div class="mt-2 text-xs text-gray-500">
+                                                <i class="fas fa-check-circle"></i>
+                                                {{ $completedItems }} dari {{ $totalItems }} item selesai
                                             </div>
                                         </div>
                                     </div>
@@ -262,7 +284,7 @@
 
             </div>
 
-            <!-- RIGHT: Calendar & Timeline -->
+            <!-- RIGHT: Calendar & Fitur List -->
             <div class="md:col-span-1 space-y-6">
 
                 <!-- Calendar Global Dinamis -->
@@ -296,31 +318,54 @@
                     <div id="calendar-mini"></div>
                 </section>
 
-                <!-- Timeline -->
+                <!-- Fitur Assessment -->
                 <section class="bg-white rounded-lg shadow p-4">
-                    <h2 class="text-lg font-semibold mb-3 flex items-center">
-                        <i class="fas fa-stream text-blue-600 mr-2"></i>
-                        Timeline Global
-                    </h2>
+                    <div class="flex justify-between items-center mb-3">
+                        <h2 class="text-lg font-semibold flex items-center">
+                            <i class="fas fa-list-check text-blue-600 mr-2"></i>
+                            Fitur Assessment
+                        </h2>
+                        <a href="{{ route('fitur.create') }}" 
+                           class="text-xs bg-green-600 text-white px-3 py-1.5 rounded hover:bg-green-700 transition duration-300 flex items-center">
+                            <i class="fas fa-plus mr-1"></i>
+                            Tambah Fitur
+                        </a>
+                    </div>
 
                     <div class="space-y-3 max-h-64 md:max-h-96 overflow-y-auto">
-                        <div class="border-l-2 border-blue-500 pl-3 py-1">
-                            <div class="text-xs text-gray-500">20/07/2023 • RS Sehat Sentosa</div>
-                            <div class="text-sm">Tahapan "Pembentukan Tim" diselesaikan</div>
-                            <div class="text-xs text-gray-400">Oleh: Budi Santoso</div>
-                        </div>
-
-                        <div class="border-l-2 border-blue-500 pl-3 py-1">
-                            <div class="text-xs text-gray-500">18/07/2023 • Puskesmas Harapan</div>
-                            <div class="text-sm">Faskes Puskesmas Harapan dibuat</div>
-                            <div class="text-xs text-gray-400">Oleh: Admin</div>
-                        </div>
-
-                        <div class="border-l-2 border-blue-500 pl-3 py-1">
-                            <div class="text-xs text-gray-500">15/07/2023 • RS Sehat Sentosa</div>
-                            <div class="text-sm">Faskes RS Sehat Sentosa dibuat</div>
-                            <div class="text-xs text-gray-400">Oleh: Admin</div>
-                        </div>
+                        @forelse($fiturs as $fitur)
+                            <div class="border border-gray-200 rounded-lg p-3 bg-gray-50 hover:bg-gray-100 transition duration-300">
+                                <div class="text-xs font-semibold text-gray-700 mb-1">
+                                    NO ASSESSMENT: {{ $fitur->no_assessment }}
+                                </div>
+                                <div class="text-sm font-medium text-gray-800 mb-2">
+                                    {{ Str::limit($fitur->judul, 60) }}
+                                </div>
+                                <div class="text-xs text-gray-600 space-y-1">
+                                    <div>
+                                        <span class="font-medium">TARGET UAT:</span> 
+                                        {{ $fitur->target_uat ? $fitur->target_uat->format('d-m-Y') : '-' }}
+                                    </div>
+                                    <div>
+                                        <span class="font-medium">TARGET RILIS:</span> 
+                                        {{ $fitur->target_due_date ? $fitur->target_due_date->format('d-m-Y') : '-' }}
+                                    </div>
+                                </div>
+                                @if($fitur->link)
+                                    <div class="mt-2">
+                                        <a href="{{ $fitur->link }}" target="_blank" 
+                                           class="inline-block px-3 py-1 bg-green-600 text-white text-xs font-medium rounded hover:bg-green-700 transition duration-300">
+                                            LINK
+                                        </a>
+                                    </div>
+                                @endif
+                            </div>
+                        @empty
+                            <div class="text-center text-gray-500 text-sm py-8">
+                                <i class="fas fa-inbox text-3xl mb-2"></i>
+                                <p>Belum ada data fitur</p>
+                            </div>
+                        @endforelse
                     </div>
                 </section>
 

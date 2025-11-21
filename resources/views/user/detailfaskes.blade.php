@@ -190,7 +190,11 @@
                                 Tahapan Implementasi
                             </h3>
 
-                            <!-- Removed the "Tambah Tahapan" button as requested -->
+                            <!-- Button to open modal for adding a new stage -->
+                            <button onclick="toggleModalTahapan()" class="px-3 py-1.5 bg-blue-600 text-white rounded text-sm flex items-center hover:bg-blue-700">
+                                <i class="fas fa-plus mr-1"></i>
+                                Tambah Tahapan
+                            </button>
                         </div>
 
                         {{-- LOOP MASTER TAHAPAN --}}
@@ -294,6 +298,17 @@
                                                             <div class="text-xs text-gray-500">
                                                                 <i class="fas fa-hdd mr-1"></i>{{ $submaster->file_size }}
                                                             </div>
+                                                            {{-- Menambahkan informasi user yang upload dan edit file --}}
+                                                            @if($submaster->uploader)
+                                                            <div class="text-xs text-gray-600 mt-1">
+                                                                <i class="fas fa-user mr-1"></i>Diupload oleh: <span class="font-medium">{{ $submaster->uploader->name }}</span>
+                                                            </div>
+                                                            @endif
+                                                            @if($submaster->updater && $submaster->updated_by != $submaster->uploaded_by)
+                                                            <div class="text-xs text-gray-600">
+                                                                <i class="fas fa-user-edit mr-1"></i>Diedit oleh: <span class="font-medium">{{ $submaster->updater->name }}</span>
+                                                            </div>
+                                                            @endif
                                                         </div>
                                                     </div>
                                                     <div class="flex space-x-2">
@@ -406,6 +421,17 @@
                                                                     <div class="text-xs text-gray-500">
                                                                         <i class="fas fa-hdd mr-1"></i>{{ $subsection->file_size }}
                                                                     </div>
+                                                                    {{-- Menambahkan informasi user yang upload dan edit file --}}
+                                                                    @if($subsection->uploader)
+                                                                    <div class="text-xs text-gray-600 mt-1">
+                                                                        <i class="fas fa-user mr-1"></i>Diupload oleh: <span class="font-medium">{{ $subsection->uploader->name }}</span>
+                                                                    </div>
+                                                                    @endif
+                                                                    @if($subsection->updater && $subsection->updated_by != $subsection->uploaded_by)
+                                                                    <div class="text-xs text-gray-600">
+                                                                        <i class="fas fa-user-edit mr-1"></i>Diedit oleh: <span class="font-medium">{{ $subsection->updater->name }}</span>
+                                                                    </div>
+                                                                    @endif
                                                                 </div>
                                                             </div>
                                                             <div class="flex space-x-2">
@@ -542,31 +568,54 @@
                     <div id="calendar-mini"></div>
                 </section>
 
-                <!-- Timeline -->
+                <!-- Fitur Assessment -->
                 <section class="bg-white rounded-lg shadow p-4">
-                    <h2 class="text-lg font-semibold mb-3 flex items-center">
-                        <i class="fas fa-stream text-blue-600 mr-2"></i>
-                        Timeline Global
-                    </h2>
+                    <div class="flex justify-between items-center mb-3">
+                        <h2 class="text-lg font-semibold flex items-center">
+                            <i class="fas fa-list-check text-blue-600 mr-2"></i>
+                            Fitur Assessment
+                        </h2>
+                        <a href="{{ route('fitur.create') }}" 
+                           class="text-xs bg-green-600 text-white px-3 py-1.5 rounded hover:bg-green-700 transition duration-300 flex items-center">
+                            <i class="fas fa-plus mr-1"></i>
+                            Tambah Fitur
+                        </a>
+                    </div>
 
                     <div class="space-y-3 max-h-64 md:max-h-96 overflow-y-auto">
-                        <div class="border-l-2 border-blue-500 pl-3 py-1">
-                            <div class="text-xs text-gray-500">20/07/2023 • RS Sehat Sentosa</div>
-                            <div class="text-sm">Tahapan "Pembentukan Tim" diselesaikan</div>
-                            <div class="text-xs text-gray-400">Oleh: Budi Santoso</div>
-                        </div>
-
-                        <div class="border-l-2 border-blue-500 pl-3 py-1">
-                            <div class="text-xs text-gray-500">18/07/2023 • Puskesmas Harapan</div>
-                            <div class="text-sm">Faskes Puskesmas Harapan dibuat</div>
-                            <div class="text-xs text-gray-400">Oleh: Admin</div>
-                        </div>
-
-                        <div class="border-l-2 border-blue-500 pl-3 py-1">
-                            <div class="text-xs text-gray-500">15/07/2023 • RS Sehat Sentosa</div>
-                            <div class="text-sm">Faskes RS Sehat Sentosa dibuat</div>
-                            <div class="text-xs text-gray-400">Oleh: Admin</div>
-                        </div>
+                        @forelse($fiturs as $fitur)
+                            <div class="border border-gray-200 rounded-lg p-3 bg-gray-50 hover:bg-gray-100 transition duration-300">
+                                <div class="text-xs font-semibold text-gray-700 mb-1">
+                                    NO ASSESSMENT: {{ $fitur->no_assessment }}
+                                </div>
+                                <div class="text-sm font-medium text-gray-800 mb-2">
+                                    {{ Str::limit($fitur->judul, 60) }}
+                                </div>
+                                <div class="text-xs text-gray-600 space-y-1">
+                                    <div>
+                                        <span class="font-medium">TARGET UAT:</span> 
+                                        {{ $fitur->target_uat ? $fitur->target_uat->format('d-m-Y') : '-' }}
+                                    </div>
+                                    <div>
+                                        <span class="font-medium">TARGET RILIS:</span> 
+                                        {{ $fitur->target_due_date ? $fitur->target_due_date->format('d-m-Y') : '-' }}
+                                    </div>
+                                </div>
+                                @if($fitur->link)
+                                    <div class="mt-2">
+                                        <a href="{{ $fitur->link }}" target="_blank" 
+                                           class="inline-block px-3 py-1 bg-green-600 text-white text-xs font-medium rounded hover:bg-green-700 transition duration-300">
+                                            LINK
+                                        </a>
+                                    </div>
+                                @endif
+                            </div>
+                        @empty
+                            <div class="text-center text-gray-500 text-sm py-8">
+                                <i class="fas fa-inbox text-3xl mb-2"></i>
+                                <p>Belum ada data fitur</p>
+                            </div>
+                        @endforelse
                     </div>
                 </section>
 

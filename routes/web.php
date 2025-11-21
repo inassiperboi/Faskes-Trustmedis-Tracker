@@ -14,6 +14,8 @@ use App\Http\Controllers\AdminMasterController; // Added AdminMasterController i
 use App\Http\Controllers\AdminMasterTahapanController; // Added AdminMasterTahapanController
 use App\Http\Controllers\AdminSubMasterController; // Added AdminSubMasterController import
 use App\Http\Controllers\AdminSubSectionController; // Added AdminSubSectionController import
+use App\Http\Controllers\FiturController; // Added FiturController import
+use App\Http\Controllers\AdminFiturController; // Added AdminFiturController import
 use App\Models\User; // Import User model
 
 // ==================== ROUTE AUTHENTICATION ====================
@@ -46,10 +48,6 @@ Route::get('/', function () {
 Route::middleware(['auth'])->group(function () {
     
     // ==================== ROUTE ADMIN ====================
-    Route::get('/admin/dashboard', function () {
-        return view('admin.admindash');
-    })->name('admin.dashboard');
-
     Route::resource('users', UserController::class);
     
     Route::resource('admin/faskes', AdminFaskesController::class, [
@@ -71,6 +69,11 @@ Route::middleware(['auth'])->group(function () {
     // ==================== ROUTE ADMIN SUBSECTION ====================
     Route::resource('admin/subsection', AdminSubSectionController::class, [
         'names' => 'admin.subsection'
+    ]);
+
+    // ==================== ROUTE ADMIN FITUR ====================
+    Route::resource('admin/fitur', AdminFiturController::class, [
+        'names' => 'admin.fitur'
     ]);
 
     // ==================== ROUTE DASHBOARD ====================
@@ -144,4 +147,7 @@ Route::middleware(['auth'])->group(function () {
     // ==================== ROUTE CALENDAR ====================
     Route::get('/kalender', [CalendarController::class, 'index'])->name('calendar.index');
     Route::get('/api/kalender/events', [CalendarController::class, 'apiEvents'])->name('calendar.events');
+
+    // ==================== ROUTE FITUR ====================
+    Route::resource('fitur', FiturController::class);
 });

@@ -22,6 +22,9 @@
                     <th>Deadline</th>
                     <th>Status</th>
                     <th>File</th>
+                    {{-- Menambahkan kolom Diupload Oleh dan Diedit Oleh --}}
+                    <th>Diupload Oleh</th>
+                    <th>Diedit Oleh</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
@@ -48,6 +51,9 @@
                             -
                         @endif
                     </td>
+                    {{-- Menampilkan nama user yang upload dan edit --}}
+                    <td>{{ $submaster->uploader->name ?? '-' }}</td>
+                    <td>{{ $submaster->updater->name ?? '-' }}</td>
                     <td>
                         <div class="action-buttons">
                             <a href="{{ route('admin.submaster.edit', $submaster->id) }}" class="btn-edit">
@@ -65,7 +71,8 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="7" style="text-align: center;">Belum ada data sub master.</td>
+                    {{-- Update colspan karena ada 2 kolom baru --}}
+                    <td colspan="9" style="text-align: center;">Belum ada data sub master.</td>
                 </tr>
                 @endforelse
             </tbody>

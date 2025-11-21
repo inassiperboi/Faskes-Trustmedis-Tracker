@@ -6,6 +6,7 @@ use App\Models\SubMaster;
 use App\Models\SubSection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class SubSectionController extends Controller
 {
@@ -24,6 +25,7 @@ class SubSectionController extends Controller
         $fileName = null;
         $fileOriginalName = null;
         $fileSize = null;
+        $uploadedBy = null;
 
         // Handle file upload
         if ($request->hasFile('file')) {
@@ -32,6 +34,7 @@ class SubSectionController extends Controller
             $fileName = time() . '_' . uniqid() . '_' . $fileOriginalName;
             $filePath = $file->storeAs('uploads/subsection', $fileName, 'public');
             $fileSize = $this->formatFileSize($file->getSize());
+            $uploadedBy = Auth::id();
         }
 
         SubSection::create([
@@ -39,11 +42,12 @@ class SubSectionController extends Controller
             'nama' => $request->nama,
             'deadline' => $request->deadline,
             'catatan' => $request->catatan,
-            'status' => 'pending', // Default status
+            'status' => 'pending',
             'file_path' => $filePath,
             'file_name' => $fileName,
             'file_original_name' => $fileOriginalName,
             'file_size' => $fileSize,
+            'uploaded_by' => $uploadedBy,
         ]);
 
         return redirect()->back()->with('success', 'Sub-section berhasil ditambahkan!');
@@ -72,7 +76,6 @@ class SubSectionController extends Controller
             'nama' => $request->nama,
             'deadline' => $request->deadline,
             'catatan' => $request->catatan,
-            // Status tidak diupdate dari form, hanya dari tombol submit
         ];
 
         // Handle file upload jika ada file baru
@@ -92,6 +95,10 @@ class SubSectionController extends Controller
             $data['file_name'] = $fileName;
             $data['file_original_name'] = $fileOriginalName;
             $data['file_size'] = $fileSize;
+            $data['updated_by'] = Auth::id();
+            if (!$subsection->uploaded_by) {
+                $data['uploaded_by'] = Auth::id();
+            }
         }
 
         $subsection->update($data);

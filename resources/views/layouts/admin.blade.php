@@ -358,12 +358,6 @@
         </div>
         <div class="sidebar-menu">
             <ul>
-                <li class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-                    <a href="{{ route('admin.dashboard') }}">
-                        <i class="fas fa-tachometer-alt"></i>
-                        <span>Dashboard</span>
-                    </a>
-                </li>
                 <li class="{{ request()->routeIs('admin.faskes.*') ? 'active' : '' }}">
                     <a href="{{ route('admin.faskes.index') }}">
                         <i class="fas fa-clinic-medical"></i>
@@ -392,6 +386,12 @@
                     <a href="{{ route('admin.subsection.index') }}">
                         <i class="fas fa-th-list"></i>
                         <span>Kelola Sub Sections</span>
+                    </a>
+                </li>
+                <li class="{{ request()->routeIs('admin.fitur.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.fitur.index') }}">
+                        <i class="fas fa-star"></i>
+                        <span>Kelola Fitur</span>
                     </a>
                 </li>
                 <li class="{{ request()->routeIs('users.*') ? 'active' : '' }}">

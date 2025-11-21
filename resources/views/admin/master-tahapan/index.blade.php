@@ -22,6 +22,7 @@
             <thead>
                 <tr>
                     <th>No</th>
+                    <!-- Added Urutan and Keterangan columns -->
                     <th>Urutan</th>
                     <th>Nama Tahapan</th>
                     <th>Keterangan</th>
@@ -29,6 +30,7 @@
                 </tr>
             </thead>
             <tbody>
+                <!-- Updated variable name from $masterTahapans to $masterTahapan and field names -->
                 @forelse($masterTahapan as $tahapan)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
@@ -52,6 +54,7 @@
                 </tr>
                 @empty
                 <tr>
+                    <!-- Updated colspan to match new column count -->
                     <td colspan="5" style="text-align: center;">Belum ada data master tahapan.</td>
                 </tr>
                 @endforelse
@@ -59,7 +62,7 @@
         </table>
     </div>
 
-    <!-- Informasi Sistem -->
+    <!-- Added information box -->
     <div style="margin-top: 20px; padding: 15px; background: #e3f2fd; border-radius: 4px; border-left: 4px solid #2196f3;">
         <h6 style="margin: 0 0 5px 0; color: #1976d2; font-weight: bold;">
             <i class="fas fa-info-circle"></i> Informasi Sistem

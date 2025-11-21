@@ -12,11 +12,13 @@ class SubMaster extends Model
         'nama',
         'deadline',
         'catatan',
-        'status', // Ganti progress & completed dengan status
+        'status',
         'file_path',
         'file_name',
         'file_original_name',
-        'file_size'
+        'file_size',
+        'uploaded_by',
+        'updated_by'
     ];
 
     protected $casts = [
@@ -31,6 +33,16 @@ class SubMaster extends Model
     public function subsections()
     {
         return $this->hasMany(SubSection::class, 'sub_master_id');
+    }
+
+    public function uploader()
+    {
+        return $this->belongsTo(User::class, 'uploaded_by');
+    }
+
+    public function updater()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
     }
 
     // Helper method untuk menandai sebagai selesai

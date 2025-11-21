@@ -32,7 +32,7 @@ class AuthController extends Controller  // <- PASTIKAN nama class AuthControlle
             
             $user = Auth::user();
             if ($user->role === 'admin') {
-                return redirect()->route('admin.dashboard')->with('success', 'Login berhasil sebagai Admin!');
+                return redirect()->route('admin.faskes.index')->with('success', 'Login berhasil sebagai Admin!');
             }
 
             return redirect()->intended('/dashboard')->with('success', 'Login berhasil!');

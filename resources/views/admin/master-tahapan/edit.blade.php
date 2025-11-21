@@ -14,7 +14,8 @@
     <form action="{{ route('admin.master-tahapan.update', $masterTahapan->id) }}" method="POST">
         @csrf
         @method('PUT')
-
+        
+        <!-- Changed field name from nama_tahapan to nama -->
         <div class="form-group">
             <label for="nama">Nama Tahapan *</label>
             <input type="text" 
@@ -28,6 +29,7 @@
             @enderror
         </div>
 
+        <!-- Added urutan field -->
         <div class="form-group">
             <label for="urutan">Urutan Prioritas *</label>
             <input type="number" 
@@ -42,6 +44,7 @@
             @enderror
         </div>
 
+        <!-- Added keterangan field -->
         <div class="form-group">
             <label for="keterangan">Keterangan (Opsional)</label>
             <textarea name="keterangan" 
@@ -54,6 +57,7 @@
         </div>
 
         <div class="form-group" style="margin-top: 20px;">
+            <!-- Updated button text and added icon -->
             <button type="submit" class="btn btn-primary">
                 <i class="fas fa-save"></i> Simpan Perubahan
             </button>
