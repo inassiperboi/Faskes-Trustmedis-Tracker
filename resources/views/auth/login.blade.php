@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Dashboard Implementasi Faskes</title>
+    <title>Trustmedis Implementation Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <style>
         .login-bg {
-            background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+            background: linear-gradient(135deg, #ffffff 0%, #ffffff 100%);
         }
         .card-shadow {
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 50px 55px 5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
     </style>
 </head>
@@ -27,7 +27,7 @@
                 </div>
             </div>
             <h2 class="text-3xl font-bold text-gray-900">
-                Dashboard Faskes
+                Trustmedis Implementation Tracker
             </h2>
             <p class="mt-2 text-sm text-gray-600">
                 Sistem Implementasi Fasilitas Kesehatan
@@ -61,12 +61,12 @@
                 <label for="email" class="block text-sm font-medium text-gray-700">
                     <i class="fas fa-envelope mr-2 text-blue-500"></i>Alamat Email
                 </label>
-                <input 
-                    id="email" 
-                    name="email" 
-                    type="email" 
-                    autocomplete="email" 
-                    required 
+                <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    autocomplete="email"
+                    required
                     class="appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
                     placeholder="masukkan email anda"
                     value="{{ old('email') }}"
@@ -78,12 +78,12 @@
                 <label for="password" class="block text-sm font-medium text-gray-700">
                     <i class="fas fa-lock mr-2 text-blue-500"></i>Kata Sandi
                 </label>
-                <input 
-                    id="password" 
-                    name="password" 
-                    type="password" 
-                    autocomplete="current-password" 
-                    required 
+                <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    autocomplete="current-password"
+                    required
                     class="appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
                     placeholder="masukkan kata sandi"
                 >
@@ -92,10 +92,10 @@
             <!-- Remember Me -->
             <div class="flex items-center justify-between">
                 <div class="flex items-center">
-                    <input 
-                        id="remember" 
-                        name="remember" 
-                        type="checkbox" 
+                    <input
+                        id="remember"
+                        name="remember"
+                        type="checkbox"
                         class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                         {{ old('remember') ? 'checked' : '' }}
                     >
@@ -107,8 +107,8 @@
 
             <!-- Submit Button -->
             <div>
-                <button 
-                    type="submit" 
+                <button
+                    type="submit"
                     class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-200 transform hover:scale-[1.02]"
                 >
                     <span class="absolute left-0 inset-y-0 flex items-center pl-3">
@@ -121,11 +121,10 @@
             <!-- Demo Accounts Info -->
             <div class="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
                 <h4 class="text-sm font-semibold text-blue-800 mb-2 flex items-center">
-                    <i class="fas fa-info-circle mr-2"></i>Akun Demo:
+                    <i class="fas fa-info-circle mr-2"></i>Informasi Akun
                 </h4>
                 <div class="text-xs text-blue-700 space-y-1">
-                    <div><strong>Admin:</strong> admin@faskes.com / password123</div>
-                    <div><strong>User:</strong> user@faskes.com / password123</div>
+                    <div> user@trustmedis.com / user1234</div>
                 </div>
             </div>
         </form>
@@ -133,7 +132,7 @@
         <!-- Footer -->
         <div class="mt-6 text-center">
             <p class="text-xs text-gray-500">
-                &copy; {{ date('Y') }} Dashboard Implementasi Faskes. All rights reserved.
+                &copy; {{ date('Y') }} Faskes Tracker by PKL-Inas Najah
             </p>
         </div>
     </div>

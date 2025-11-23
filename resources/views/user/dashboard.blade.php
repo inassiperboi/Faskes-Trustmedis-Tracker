@@ -8,8 +8,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- FullCalendar CSS -->
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
-    
+
     <style>
+        body {
+        padding-bottom: 50px; /* BIKIN BAWAH GA NEPLEK */
+        }
+
         .progress-bar {
             height: 8px;
             background-color: #e5e7eb;
@@ -27,80 +31,158 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        
-        /* Styles untuk kalender mini di dashboard - diperbaiki untuk tampilan lebih bagus */
-        #calendar-mini {
-            font-size: 0.85rem; /* Sedikit diperbesar dari 0.75rem */
-            font-family: 'Inter', sans-serif; /* Font yang lebih modern */
-        }
-        #calendar-mini .fc-header-toolbar {
-            margin-bottom: 0.75em;
-            font-size: 0.9rem; /* Diperbesar */
-            background: linear-gradient(135deg, #3b82f6, #1e40af); /* Gradient biru untuk header */
-            color: white;
-            border-radius: 8px;
-            padding: 0.5em;
-        }
-        #calendar-mini .fc-toolbar-title {
-            font-size: 1rem; /* Diperbesar */
-            font-weight: bold;
-        }
-        #calendar-mini .fc-button {
-            padding: 0.3em 0.6em; /* Diperbesar */
-            font-size: 0.8rem; /* Diperbesar */
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            border-radius: 6px;
-            color: white;
-            transition: background 0.3s ease;
-        }
-        #calendar-mini .fc-button:hover {
-            background: rgba(255, 255, 255, 0.4);
-        }
-        #calendar-mini .fc-button:not(:disabled).fc-button-active {
-            background: white;
-            color: #3b82f6;
-        }
-        #calendar-mini .fc-daygrid-day-frame {
-            min-height: 2.5rem; /* Diperbesar untuk lebih nyaman */
-            border-radius: 6px;
-            transition: background 0.3s ease;
-        }
-        #calendar-mini .fc-daygrid-day:hover {
-            background: #f0f9ff; /* Hover effect */
-        }
-        #calendar-mini .fc-daygrid-day-number {
-            font-size: 0.8rem; /* Diperbesar */
-            padding: 4px;
-            font-weight: 600;
-        }
-        #calendar-mini .fc-event {
-            font-size: 0.7rem; /* Diperbesar sedikit */
-            padding: 2px 4px; /* Diperbesar */
-            margin: 2px 0;
-            border-radius: 4px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-        #calendar-mini .fc-event:hover {
-            transform: scale(1.05); /* Sedikit zoom on hover */
-        }
-        #calendar-mini .fc-day-today {
-            background: #dbeafe !important; /* Highlight hari ini */
-            border: 2px solid #3b82f6;
-        }
-        .legend-item {
-            display: inline-flex;
-            align-items: center;
-            margin-right: 0.5rem;
-            font-size: 0.8rem; /* Diperbesar */
-        }
-        .legend-color {
-            width: 12px; /* Diperbesar */
-            height: 12px; /* Diperbesar */
-            border-radius: 3px;
-            margin-right: 0.4rem;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-        }
+
+  /* ==== MINI CALENDAR (Final Revisi: Simetris + Responsive) ==== */
+
+#calendar-mini {
+    font-size: 0.85rem;
+    font-family: 'Inter', sans-serif;
+}
+
+/* --- Header Toolbar --- */
+#calendar-mini .fc-header-toolbar {
+    margin-bottom: 0.75em;
+    font-size: 0.9rem;
+    background: linear-gradient(135deg, #3b82f6, #1e40af);
+    color: white;
+    border-radius: 8px;
+    padding: 0.6em 0.8em;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+}
+
+#calendar-mini .fc-toolbar-title {
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+/* --- Buttons --- */
+#calendar-mini .fc-button {
+    padding: 0.35em 0.7em;
+    font-size: 0.8rem;
+    background: rgba(255, 255, 255, 0.25);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+#calendar-mini .fc-button:hover {
+    background: rgba(255, 255, 255, 0.4);
+    transform: scale(1.05);
+}
+
+#calendar-mini .fc-button:not(:disabled).fc-button-active {
+    background: white;
+    color: #3b82f6;
+}
+
+/* ==== GRID FIX: BIDANG TANGGAL HARUS SIMETRIS ==== */
+#calendar-mini .fc-scrollgrid-section-body table {
+    table-layout: fixed !important;  /* fix lebar kolom */
+}
+
+#calendar-mini .fc-daygrid-day,
+#calendar-mini .fc-daygrid-day-frame {
+    border: 1px solid #e5e7eb !important; /* border seragam */
+}
+
+/* Hilangkan min-height lama */
+#calendar-mini .fc-daygrid-day-frame {
+    min-height: unset !important;
+}
+
+/* Tinggi standar setiap sel agar simetris */
+#calendar-mini .fc-daygrid-day-frame {
+    height: 48px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+/* Hover cell */
+#calendar-mini .fc-daygrid-day:hover {
+    background: #f0f9ff;
+}
+
+/* Number tanggal */
+#calendar-mini .fc-daygrid-day-number {
+    font-size: 0.8rem;
+    padding: 4px;
+    font-weight: 600;
+}
+/* Warna merah untuk kolom hari Minggu */
+#calendar-mini .fc-day-sun {
+    background-color: #ffe5e5 !important; /* merah muda soft */
+}
+
+/* Angka tanggal hari Minggu jadi merah */
+#calendar-mini .fc-day-sun .fc-daygrid-day-number {
+    color: #e11d48 !important; /* merah */
+    font-weight: 700;
+}
+
+/* Event */
+#calendar-mini .fc-event {
+    font-size: 0.7rem;
+    padding: 2px 4px;
+    margin: 2px 0;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+}
+
+#calendar-mini .fc-event:hover {
+    transform: scale(1.05);
+}
+
+/* Today highlight */
+#calendar-mini .fc-day-today {
+    background: #dbeafe !important;
+    border: 2px solid #3b82f6 !important;
+}
+
+/* Legend (jika ada) */
+.legend-item {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 0.5rem;
+    font-size: 0.8rem;
+}
+
+.legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    margin-right: 0.4rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* ==== RESPONSIVE ==== */
+@media (max-width: 640px) {
+
+    #calendar-mini {
+        font-size: 0.78rem;
+    }
+
+    #calendar-mini .fc-toolbar-title {
+        font-size: 0.9rem;
+    }
+
+    #calendar-mini .fc-daygrid-day-frame {
+        height: 40px;  /* versi compact di mobile */
+    }
+
+    #calendar-mini .fc-event {
+        font-size: 0.65rem;
+        padding: 2px 3px;
+    }
+    body {
+    padding-bottom: 80px;
+    }
+
+}
     </style>
 
     <script>
@@ -112,7 +194,7 @@
         function addTeamMember(selectElement) {
             const value = selectElement.value;
             const text = selectElement.options[selectElement.selectedIndex].text;
-            
+
             if (!value) return;
 
             // Check duplicates
@@ -167,7 +249,7 @@
             <div class="flex items-center mb-4 md:mb-0">
                 <i class="fas fa-hospital text-2xl text-blue-600 mr-3"></i>
                 <div>
-                    <h1 class="text-xl font-bold text-gray-800">Dashboard Implementasi Faskes</h1>
+                    <h1 class="text-xl font-bold text-gray-800">Trustmedis Implementation Tracker</h1>
                     <p class="text-sm text-gray-600">Kelola implementasi fasilitas kesehatan secara terpusat</p>
                 </div>
             </div>
@@ -226,12 +308,12 @@
                                         <div class="mt-4 text-gray-600 space-y-2">
                                             <div class="flex items-center">
                                                 <i class="fas fa-user-tie mr-3 text-gray-500"></i>
-                                                <span class="font-medium">PJ: <span class="text-gray-800">{{ $item->penanggung_jawab }}</span></span>
+                                                <span class="font-medium">APO: <span class="text-gray-800">{{ $item->penanggung_jawab }}</span></span>
                                             </div>
 
                                             <div class="flex items-center">
                                                 <i class="fas fa-users mr-3 text-gray-500"></i>
-                                                <span class="font-medium">Tim: <span class="text-gray-800">{{ $item->tim }}</span></span>
+                                                <span class="font-medium">Data Migrator: <span class="text-gray-800">{{ $item->tim }}</span></span>
                                             </div>
                                         </div>
 
@@ -239,7 +321,7 @@
                                             <!-- Ganti progress manual dengan perhitungan otomatis dari status submit sub_master dan sub_section -->
                                             <div class="flex justify-between text-sm mb-2">
                                                 <span class="font-medium text-gray-700">Progress</span>
-                                                <span class="font-semibold 
+                                                <span class="font-semibold
                                                     @if($item->progress_percentage < 50) text-orange-600
                                                     @elseif($item->progress_percentage < 100) text-blue-600
                                                     @else text-green-600
@@ -249,15 +331,15 @@
                                             </div>
 
                                             <div class="progress-bar">
-                                                <div class="progress-fill 
+                                                <div class="progress-fill
                                                     @if($item->progress_percentage < 50) bg-orange-500
                                                     @elseif($item->progress_percentage < 100) bg-blue-500
                                                     @else bg-green-500
-                                                    @endif" 
+                                                    @endif"
                                                     style="width: {{ $item->progress_percentage }}%">
                                                 </div>
                                             </div>
-                                            
+
                                             <!-- Tampilkan detail hitungan progress -->
                                             @php
                                                 $totalItems = $item->getTotalProgressItems();
@@ -284,92 +366,74 @@
 
             </div>
 
-            <!-- RIGHT: Calendar & Fitur List -->
-            <div class="md:col-span-1 space-y-6">
+<!-- RIGHT: Calendar + Fitur Assessment -->
+<div class="md:col-span-1 space-y-6">
 
-                <!-- Calendar Global Dinamis -->
-                <section class="bg-white rounded-lg shadow p-4">
-                    <div class="flex justify-between items-center mb-3">
-                        <h2 class="text-lg font-semibold flex items-center">
-                            <i class="fas fa-calendar-alt text-blue-600 mr-2"></i>
-                            Kalender Global
-                        </h2>
-                        <a href="{{ route('calendar.index') }}" 
-                           class="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded hover:bg-blue-200 transition duration-300">
-                            Lihat Detail
-                        </a>
+    <!-- Calendar -->
+    <section class="bg-white rounded-lg shadow p-4 w-full">
+        <div class="flex flex-wrap justify-between items-center mb-3 gap-2">
+            <h2 class="text-lg font-semibold flex items-center">
+                <i class="fas fa-calendar-alt text-blue-600 mr-2 text-xl"></i>
+                Kalender
+            </h2>
+        </div>
+
+        <div id="calendar-mini"></div>
+    </section>
+
+    <!-- Fitur Assessment -->
+    <section class="bg-white rounded-lg shadow p-4">
+        <div class="flex justify-between items-center mb-3">
+            <h2 class="text-lg font-semibold flex items-center">
+                <i class="fas fa-list-check text-blue-600 mr-2"></i>
+                Fitur Assessment
+            </h2>
+            <a href="{{ route('fitur.create') }}"
+               class="text-xs bg-green-600 text-white px-3 py-1.5 rounded hover:bg-green-700 transition duration-300 flex items-center">
+                <i class="fas fa-plus mr-1"></i>
+                Tambah Fitur
+            </a>
+        </div>
+
+        <div class="space-y-3 max-h-64 md:max-h-96 overflow-y-auto">
+            @forelse($fiturs as $fitur)
+                <div class="border border-gray-200 rounded-lg p-3 bg-gray-50 hover:bg-gray-100 transition duration-300">
+                    <div class="text-xs font-semibold text-gray-700 mb-1">
+                        NO ASSESSMENT: {{ $fitur->no_assessment }}
                     </div>
-
-                    <!-- Legend Mini -->
-                    <div class="mb-3">
-                        <div class="flex flex-wrap gap-2">
-                            <div class="legend-item">
-                                <div class="legend-color" style="background-color: #3b82f6;"></div>
-                                <span>Tahapan</span>
-                            </div>
-                            <div class="legend-item">
-                                <div class="legend-color" style="background-color: #10b981;"></div>
-                                <span>Sub</span>
-                            </div>
+                    <div class="text-sm font-medium text-gray-800 mb-2">
+                        {{ Str::limit($fitur->judul, 60) }}
+                    </div>
+                    <div class="text-xs text-gray-600 space-y-1">
+                        <div>
+                            <span class="font-medium">TARGET UAT:</span>
+                            {{ $fitur->target_uat ? $fitur->target_uat->format('d-m-Y') : '-' }}
+                        </div>
+                        <div>
+                            <span class="font-medium">TARGET RILIS:</span>
+                            {{ $fitur->target_due_date ? $fitur->target_due_date->format('d-m-Y') : '-' }}
                         </div>
                     </div>
+                    @if($fitur->link)
+                        <div class="mt-2">
+                            <a href="{{ $fitur->link }}" target="_blank"
+                               class="inline-block px-3 py-1 bg-green-600 text-white text-xs font-medium rounded hover:bg-green-700 transition duration-300">
+                                LINK
+                            </a>
+                        </div>
+                    @endif
+                </div>
+            @empty
+                <div class="text-center text-gray-500 text-sm py-8">
+                    <i class="fas fa-inbox text-3xl mb-2"></i>
+                    <p>Belum ada data fitur</p>
+                </div>
+            @endforelse
+        </div>
+    </section>
 
-                    <!-- Kalender Mini -->
-                    <div id="calendar-mini"></div>
-                </section>
+</div>
 
-                <!-- Fitur Assessment -->
-                <section class="bg-white rounded-lg shadow p-4">
-                    <div class="flex justify-between items-center mb-3">
-                        <h2 class="text-lg font-semibold flex items-center">
-                            <i class="fas fa-list-check text-blue-600 mr-2"></i>
-                            Fitur Assessment
-                        </h2>
-                        <a href="{{ route('fitur.create') }}" 
-                           class="text-xs bg-green-600 text-white px-3 py-1.5 rounded hover:bg-green-700 transition duration-300 flex items-center">
-                            <i class="fas fa-plus mr-1"></i>
-                            Tambah Fitur
-                        </a>
-                    </div>
-
-                    <div class="space-y-3 max-h-64 md:max-h-96 overflow-y-auto">
-                        @forelse($fiturs as $fitur)
-                            <div class="border border-gray-200 rounded-lg p-3 bg-gray-50 hover:bg-gray-100 transition duration-300">
-                                <div class="text-xs font-semibold text-gray-700 mb-1">
-                                    NO ASSESSMENT: {{ $fitur->no_assessment }}
-                                </div>
-                                <div class="text-sm font-medium text-gray-800 mb-2">
-                                    {{ Str::limit($fitur->judul, 60) }}
-                                </div>
-                                <div class="text-xs text-gray-600 space-y-1">
-                                    <div>
-                                        <span class="font-medium">TARGET UAT:</span> 
-                                        {{ $fitur->target_uat ? $fitur->target_uat->format('d-m-Y') : '-' }}
-                                    </div>
-                                    <div>
-                                        <span class="font-medium">TARGET RILIS:</span> 
-                                        {{ $fitur->target_due_date ? $fitur->target_due_date->format('d-m-Y') : '-' }}
-                                    </div>
-                                </div>
-                                @if($fitur->link)
-                                    <div class="mt-2">
-                                        <a href="{{ $fitur->link }}" target="_blank" 
-                                           class="inline-block px-3 py-1 bg-green-600 text-white text-xs font-medium rounded hover:bg-green-700 transition duration-300">
-                                            LINK
-                                        </a>
-                                    </div>
-                                @endif
-                            </div>
-                        @empty
-                            <div class="text-center text-gray-500 text-sm py-8">
-                                <i class="fas fa-inbox text-3xl mb-2"></i>
-                                <p>Belum ada data fitur</p>
-                            </div>
-                        @endforelse
-                    </div>
-                </section>
-
-            </div>
 
         </div>
     </div>
@@ -399,10 +463,10 @@
 
                 {{-- Updated Tim to Custom Multi-Select UI --}}
                 <label class="block mb-2">Tim</label>
-                
+
                 <!-- Container for selected tags -->
                 <div id="selected-teams-container" class="flex flex-wrap mb-2"></div>
-                
+
                 <!-- Hidden inputs container -->
                 <div id="hidden-inputs-container"></div>
 
@@ -433,11 +497,11 @@
     <!-- FullCalendar JS -->
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/id.js"></script>
-    
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar-mini');
-            
+
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
                 locale: 'id',
@@ -457,13 +521,13 @@
                 eventDidMount: function(info) {
                     // Tambahkan tooltip
                     info.el.title = info.event.title;
-                    
+
                     // Highlight deadline yang mendekati (kurang dari 3 hari)
                     const eventDate = new Date(info.event.start);
                     const today = new Date();
                     const diffTime = eventDate - today;
                     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                    
+
                     if (diffDays <= 3 && diffDays >= 0) {
                         info.el.style.backgroundColor = '#ef4444';
                         info.el.style.borderColor = '#ef4444';
@@ -477,7 +541,7 @@
                     meridiem: false
                 }
             });
-            
+
             calendar.render();
         });
     </script>

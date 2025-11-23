@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
             ['email' => 'megan@trustmedis.com'],
             [
                 'name' => 'megan',
-                'password' => 'megan1234', // Will be hashed by cast
+                'password' => 'megan1234', 
                 'role' => 'admin',
                 'jabatan' => 'magang',
             ]

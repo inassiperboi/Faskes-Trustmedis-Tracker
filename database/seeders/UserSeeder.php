@@ -11,7 +11,7 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        // Hapus user Inas jika sudah ada (optional)
+
         User::where('email', 'inas@trustmedis.com')->delete();
 
         // Buat user Inas
