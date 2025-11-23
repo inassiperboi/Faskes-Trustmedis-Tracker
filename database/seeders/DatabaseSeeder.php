@@ -18,12 +18,12 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         User::firstOrCreate(
-            ['email' => 'megan@trustmedis.com'],
+            ['email' => 'admin@trustmedis.com'],
             [
-                'name' => 'megan',
-                'password' => 'megan1234', 
+                'name' => 'admin',
+                'password' => 'admin1234',
                 'role' => 'admin',
-                'jabatan' => 'magang',
+                'jabatan' => 'administrator',
             ]
         );
 

@@ -11,7 +11,6 @@ use Illuminate\Http\Request;
 
 class FaskesController extends Controller
 {
-    // ====== TAMPILKAN DASHBOARD ======
     public function index()
     {
         $faskes = Faskes::orderBy('created_at', 'desc')->get();
