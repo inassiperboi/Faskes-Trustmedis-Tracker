@@ -6,8 +6,7 @@
     <title>Detail Faskes - Dashboard Implementasi Faskes</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- FullCalendar CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+    <!-- Removed FullCalendar CSS - using custom simple calendar -->
 
     <style>
         body {
@@ -32,157 +31,224 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-  /* ==== MINI CALENDAR (Final Revisi: Simetris + Responsive) ==== */
+        /* New simple calendar styles */
+        .calendar-day {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        .calendar-day:hover:not(.today):not(.text-gray-300) {
+            background-color: #f3f4f6;
+        }
+        .calendar-day.today {
+            background-color: #3b82f6;
+            color: white;
+            font-weight: 600;
+        }
+        .calendar-day.has-event {
+            position: relative;
+        }
+        .calendar-day.has-event::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            width: 4px;
+            height: 4px;
+            background-color: #10b981;
+            border-radius: 50%;
+        }
+        .calendar-day.today.has-event::after {
+            background-color: white;
+        }
 
-#calendar-mini {
-    font-size: 0.85rem;
-    font-family: 'Inter', sans-serif;
-}
+        .hierarchy-item {
+            border-left: 3px solid #e5e7eb;
+            padding-left: 1rem;
+            margin-left: 1rem;
+        }
+        .hierarchy-item.completed {
+            border-left-color: #10b981;
+        }
+        .hierarchy-item.in-progress {
+            border-left-color: #f59e0b;
+        }
+        .hierarchy-item.not-started {
+            border-left-color: #ef4444;
+        }
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 0.375rem;
+        }
+        .badge-submaster {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+        .badge-subsection {
+            background-color: #f3e8ff;
+            color: #7e22ce;
+        }
 
-/* --- Header Toolbar --- */
-#calendar-mini .fc-header-toolbar {
-    margin-bottom: 0.75em;
-    font-size: 0.9rem;
-    background: linear-gradient(135deg, #3b82f6, #1e40af);
-    color: white;
-    border-radius: 8px;
-    padding: 0.6em 0.8em;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5em;
-}
 
-#calendar-mini .fc-toolbar-title {
-    font-size: 1rem;
-    font-weight: bold;
-}
+        /* ==== MINI CALENDAR (Final Revisi: Simetris + Responsive) ==== */
 
-/* --- Buttons --- */
-#calendar-mini .fc-button {
-    padding: 0.35em 0.7em;
-    font-size: 0.8rem;
-    background: rgba(255, 255, 255, 0.25);
-    border: none;
-    border-radius: 6px;
-    color: white;
-    transition: background 0.3s ease, transform 0.2s ease;
-}
+        #calendar-mini {
+            font-size: 0.85rem;
+            font-family: 'Inter', sans-serif;
+        }
 
-#calendar-mini .fc-button:hover {
-    background: rgba(255, 255, 255, 0.4);
-    transform: scale(1.05);
-}
+        /* --- Header Toolbar --- */
+        #calendar-mini .fc-header-toolbar {
+            margin-bottom: 0.75em;
+            font-size: 0.9rem;
+            background: linear-gradient(135deg, #3b82f6, #1e40af);
+            color: white;
+            border-radius: 8px;
+            padding: 0.6em 0.8em;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5em;
+        }
 
-#calendar-mini .fc-button:not(:disabled).fc-button-active {
-    background: white;
-    color: #3b82f6;
-}
+        #calendar-mini .fc-toolbar-title {
+            font-size: 1rem;
+            font-weight: bold;
+        }
 
-/* ==== GRID FIX: BIDANG TANGGAL HARUS SIMETRIS ==== */
-#calendar-mini .fc-scrollgrid-section-body table {
-    table-layout: fixed !important;  /* fix lebar kolom */
-}
+        /* --- Buttons --- */
+        #calendar-mini .fc-button {
+            padding: 0.35em 0.7em;
+            font-size: 0.8rem;
+            background: rgba(255, 255, 255, 0.25);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
 
-#calendar-mini .fc-daygrid-day,
-#calendar-mini .fc-daygrid-day-frame {
-    border: 1px solid #e5e7eb !important; /* border seragam */
-}
+        #calendar-mini .fc-button:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(1.05);
+        }
 
-/* Hilangkan min-height lama */
-#calendar-mini .fc-daygrid-day-frame {
-    min-height: unset !important;
-}
+        #calendar-mini .fc-button:not(:disabled).fc-button-active {
+            background: white;
+            color: #3b82f6;
+        }
 
-/* Tinggi standar setiap sel agar simetris */
-#calendar-mini .fc-daygrid-day-frame {
-    height: 48px;
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
-}
+        /* ==== GRID FIX: BIDANG TANGGAL HARUS SIMETRIS ==== */
+        #calendar-mini .fc-scrollgrid-section-body table {
+            table-layout: fixed !important;  /* fix lebar kolom */
+        }
 
-/* Hover cell */
-#calendar-mini .fc-daygrid-day:hover {
-    background: #f0f9ff;
-}
+        #calendar-mini .fc-daygrid-day,
+        #calendar-mini .fc-daygrid-day-frame {
+            border: 1px solid #e5e7eb !important; /* border seragam */
+        }
 
-/* Number tanggal */
-#calendar-mini .fc-daygrid-day-number {
-    font-size: 0.8rem;
-    padding: 4px;
-    font-weight: 600;
-}
-/* Warna merah untuk kolom hari Minggu */
-#calendar-mini .fc-day-sun {
-    background-color: #ffe5e5 !important; /* merah muda soft */
-}
+        /* Hilangkan min-height lama */
+        #calendar-mini .fc-daygrid-day-frame {
+            min-height: unset !important;
+        }
 
-/* Angka tanggal hari Minggu jadi merah */
-#calendar-mini .fc-day-sun .fc-daygrid-day-number {
-    color: #e11d48 !important; /* merah */
-    font-weight: 700;
-}
+        /* Tinggi standar setiap sel agar simetris */
+        #calendar-mini .fc-daygrid-day-frame {
+            height: 48px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-start;
+        }
 
-/* Event */
-#calendar-mini .fc-event {
-    font-size: 0.7rem;
-    padding: 2px 4px;
-    margin: 2px 0;
-    border-radius: 4px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease;
-}
+        /* Hover cell */
+        #calendar-mini .fc-daygrid-day:hover {
+            background: #f0f9ff;
+        }
 
-#calendar-mini .fc-event:hover {
-    transform: scale(1.05);
-}
+        /* Number tanggal */
+        #calendar-mini .fc-daygrid-day-number {
+            font-size: 0.8rem;
+            padding: 4px;
+            font-weight: 600;
+        }
+        /* Warna merah untuk kolom hari Minggu */
+        #calendar-mini .fc-day-sun {
+            background-color: #ffe5e5 !important; /* merah muda soft */
+        }
 
-/* Today highlight */
-#calendar-mini .fc-day-today {
-    background: #dbeafe !important;
-    border: 2px solid #3b82f6 !important;
-}
+        /* Angka tanggal hari Minggu jadi merah */
+        #calendar-mini .fc-day-sun .fc-daygrid-day-number {
+            color: #e11d48 !important; /* merah */
+            font-weight: 700;
+        }
 
-/* Legend (jika ada) */
-.legend-item {
-    display: inline-flex;
-    align-items: center;
-    margin-right: 0.5rem;
-    font-size: 0.8rem;
-}
+        /* Event */
+        #calendar-mini .fc-event {
+            font-size: 0.7rem;
+            padding: 2px 4px;
+            margin: 2px 0;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+        }
 
-.legend-color {
-    width: 12px;
-    height: 12px;
-    border-radius: 3px;
-    margin-right: 0.4rem;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-}
+        #calendar-mini .fc-event:hover {
+            transform: scale(1.05);
+        }
 
-/* ==== RESPONSIVE ==== */
-@media (max-width: 640px) {
+        /* Today highlight */
+        #calendar-mini .fc-day-today {
+            background: #dbeafe !important;
+            border: 2px solid #3b82f6 !important;
+        }
 
-    #calendar-mini {
-        font-size: 0.78rem;
-    }
+        /* Legend (jika ada) */
+        .legend-item {
+            display: inline-flex;
+            align-items: center;
+            margin-right: 0.5rem;
+            font-size: 0.8rem;
+        }
 
-    #calendar-mini .fc-toolbar-title {
-        font-size: 0.9rem;
-    }
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+            margin-right: 0.4rem;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
 
-    #calendar-mini .fc-daygrid-day-frame {
-        height: 40px;  /* versi compact di mobile */
-    }
+        /* ==== RESPONSIVE ==== */
+        @media (max-width: 640px) {
 
-    #calendar-mini .fc-event {
-        font-size: 0.65rem;
-        padding: 2px 3px;
-    }
-    body {
-    padding-bottom: 80px;
-    }
+            #calendar-mini {
+                font-size: 0.78rem;
+            }
 
-}
+            #calendar-mini .fc-toolbar-title {
+                font-size: 0.9rem;
+            }
+
+            #calendar-mini .fc-daygrid-day-frame {
+                height: 40px;  /* versi compact di mobile */
+            }
+
+            #calendar-mini .fc-event {
+                font-size: 0.65rem;
+                padding: 2px 3px;
+            }
+            body {
+            padding-bottom: 80px;
+            }
+
+        }
     </style>
 
     <script>
@@ -664,7 +730,7 @@
             <!-- RIGHT: Calendar & Timeline -->
             <div class="md:col-span-1 space-y-6">
 
-                <!-- Calendar Global Dinamis -->
+                <!-- New Simple Calendar Design -->
                 <section class="bg-white rounded-lg shadow p-4">
                     <div class="flex justify-between items-center mb-3">
                         <h2 class="text-lg font-semibold flex items-center">
@@ -691,8 +757,21 @@
                         </div>
                     </div>
 
-                    <!-- Kalender Mini -->
-                    <div id="calendar-mini"></div>
+                    <div class="mb-4 flex justify-between items-center">
+                        <button onclick="prevMonth()" class="p-1 rounded-full hover:bg-gray-100 transition">
+                            <i class="fas fa-chevron-left text-gray-600"></i>
+                        </button>
+                        <span id="calendar-month-year" class="font-medium text-gray-800"></span>
+                        <button onclick="nextMonth()" class="p-1 rounded-full hover:bg-gray-100 transition">
+                            <i class="fas fa-chevron-right text-gray-600"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="grid grid-cols-7 gap-1 mb-2 text-center text-xs text-gray-500 font-medium">
+                        <div>M</div><div>S</div><div>S</div><div>R</div><div>K</div><div>J</div><div>S</div>
+                    </div>
+                    
+                    <div id="calendar-days" class="grid grid-cols-7 gap-1"></div>
                 </section>
 
                 <!-- Fitur Assessment -->
@@ -1046,11 +1125,120 @@
     </div>
 </div>
 
-    <!-- FullCalendar JS -->
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/id.js"></script>
-
+    {{-- Replaced FullCalendar JS with simple calendar JS --}}
     <script>
+        // Simple Calendar Implementation
+        let currentDate = new Date();
+        let currentMonth = currentDate.getMonth();
+        let currentYear = currentDate.getFullYear();
+        
+        // Events from backend
+        let calendarEvents = [];
+        
+        // Fetch events from backend
+        async function fetchCalendarEvents() {
+            try {
+                const response = await fetch('{{ route("calendar.events") }}');
+                calendarEvents = await response.json();
+                renderCalendar();
+            } catch (error) {
+                console.error('Error fetching calendar events:', error);
+                renderCalendar();
+            }
+        }
+        
+        function getMonthName(month) {
+            const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 
+                           'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+            return months[month];
+        }
+        
+        function getDaysInMonth(month, year) {
+            return new Date(year, month + 1, 0).getDate();
+        }
+        
+        function getFirstDayOfMonth(month, year) {
+            // Get day of week (0 = Sunday, 1 = Monday, etc.)
+            // Convert to Monday-first (0 = Monday, 6 = Sunday)
+            let day = new Date(year, month, 1).getDay();
+            return day === 0 ? 6 : day - 1;
+        }
+        
+        function hasEventOnDate(year, month, day) {
+            const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            return calendarEvents.some(event => event.start && event.start.startsWith(dateStr));
+        }
+        
+        function renderCalendar() {
+            const monthYearEl = document.getElementById('calendar-month-year');
+            const daysEl = document.getElementById('calendar-days');
+            
+            monthYearEl.textContent = `${getMonthName(currentMonth)} ${currentYear}`;
+            
+            const daysInMonth = getDaysInMonth(currentMonth, currentYear);
+            const firstDay = getFirstDayOfMonth(currentMonth, currentYear);
+            
+            // Get days from previous month
+            const prevMonthIndex = currentMonth === 0 ? 11 : currentMonth - 1;
+            const prevYearIndex = currentMonth === 0 ? currentYear - 1 : currentYear;
+            const daysInPrevMonth = getDaysInMonth(prevMonthIndex, prevYearIndex);
+            
+            let html = '';
+            
+            // Previous month days
+            for (let i = firstDay - 1; i >= 0; i--) {
+                const day = daysInPrevMonth - i;
+                html += `<div class="calendar-day text-gray-300">${day}</div>`;
+            }
+            
+            // Current month days
+            const today = new Date();
+            for (let day = 1; day <= daysInMonth; day++) {
+                const isToday = day === today.getDate() && 
+                               currentMonth === today.getMonth() && 
+                               currentYear === today.getFullYear();
+                const hasEvent = hasEventOnDate(currentYear, currentMonth, day);
+                
+                let classes = 'calendar-day';
+                if (isToday) classes += ' today';
+                if (hasEvent) classes += ' has-event';
+                
+                html += `<div class="${classes}">${day}</div>`;
+            }
+            
+            // Next month days to fill the grid
+            const totalCells = Math.ceil((firstDay + daysInMonth) / 7) * 7;
+            const nextMonthDays = totalCells - (firstDay + daysInMonth);
+            for (let day = 1; day <= nextMonthDays; day++) {
+                html += `<div class="calendar-day text-gray-300">${day}</div>`;
+            }
+            
+            daysEl.innerHTML = html;
+        }
+        
+        function prevMonth() {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            renderCalendar();
+        }
+        
+        function nextMonth() {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            renderCalendar();
+        }
+        
+        // Initialize calendar on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchCalendarEvents();
+        });
+
         // Modal untuk Tambah Tahapan
         function toggleModalTahapan() {
             const modal = document.getElementById('modal-tahapan');
@@ -1177,59 +1365,6 @@
 
             modal.classList.toggle('hidden');
         }
-
-        // Calendar initialization
-        document.addEventListener('DOMContentLoaded', function() {
-            var calendarEl = document.getElementById('calendar-mini');
-
-            if (calendarEl) {
-                var calendar = new FullCalendar.Calendar(calendarEl, {
-                    initialView: 'dayGridMonth',
-                    locale: 'id',
-                    headerToolbar: {
-                        left: 'prev,next',
-                        center: 'title',
-                        right: ''
-                    },
-                    height: 'auto',
-                    contentHeight: 'auto',
-                    events: '{{ route("calendar.events") }}',
-                    eventClick: function(info) {
-                        if (info.event.url) {
-                            window.location.href = info.event.url;
-                        }
-                    },
-                    eventDidMount: function(info) {
-                        // Tambahkan tooltip
-                        info.el.title = info.event.title;
-
-                        // Highlight deadline yang mendekati (kurang dari 3 hari)
-                        const eventDate = new Date(info.event.start);
-                        const today = new Date();
-                        const diffTime = eventDate - today;
-                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-                        if (diffDays <= 3 && diffDays >= 0) {
-                            info.el.style.backgroundColor = '#ef4444';
-                            info.el.style.borderColor = '#ef4444';
-                            info.el.style.color = 'white';
-                        }
-                    },
-                    dayMaxEvents: 2,
-                    eventTimeFormat: {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        meridiem: false
-                    }
-                });
-
-                calendar.render();
-            }
-
-            // Initialize file upload handlers
-            handleFileUpload('submaster');
-            handleFileUpload('subsection');
-        });
 
         // Function untuk handle file upload preview
         function handleFileUpload(type) {

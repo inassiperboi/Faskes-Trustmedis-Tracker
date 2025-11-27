@@ -6,12 +6,10 @@
     <title>Dashboard Implementasi Faskes</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- FullCalendar CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
 
     <style>
         body {
-        padding-bottom: 50px; /* BIKIN BAWAH GA NEPLEK */
+            padding-bottom: 50px; /* BIKIN BAWAH GA NEPLEK */
         }
 
         .progress-bar {
@@ -32,157 +30,53 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-  /* ==== MINI CALENDAR (Final Revisi: Simetris + Responsive) ==== */
+        /* New simple calendar styles */
+        .calendar-day {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        .calendar-day:hover:not(.today):not(.text-gray-300) {
+            background-color: #f3f4f6;
+        }
+        .calendar-day.today {
+            background-color: #3b82f6;
+            color: white;
+            font-weight: 600;
+        }
+        .calendar-day.has-event {
+            position: relative;
+        }
+        .calendar-day.has-event::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            width: 4px;
+            height: 4px;
+            background-color: #10b981;
+            border-radius: 50%;
+        }
+        .calendar-day.today.has-event::after {
+            background-color: white;
+        }
 
-#calendar-mini {
-    font-size: 0.85rem;
-    font-family: 'Inter', sans-serif;
-}
-
-/* --- Header Toolbar --- */
-#calendar-mini .fc-header-toolbar {
-    margin-bottom: 0.75em;
-    font-size: 0.9rem;
-    background: linear-gradient(135deg, #3b82f6, #1e40af);
-    color: white;
-    border-radius: 8px;
-    padding: 0.6em 0.8em;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5em;
-}
-
-#calendar-mini .fc-toolbar-title {
-    font-size: 1rem;
-    font-weight: bold;
-}
-
-/* --- Buttons --- */
-#calendar-mini .fc-button {
-    padding: 0.35em 0.7em;
-    font-size: 0.8rem;
-    background: rgba(255, 255, 255, 0.25);
-    border: none;
-    border-radius: 6px;
-    color: white;
-    transition: background 0.3s ease, transform 0.2s ease;
-}
-
-#calendar-mini .fc-button:hover {
-    background: rgba(255, 255, 255, 0.4);
-    transform: scale(1.05);
-}
-
-#calendar-mini .fc-button:not(:disabled).fc-button-active {
-    background: white;
-    color: #3b82f6;
-}
-
-/* ==== GRID FIX: BIDANG TANGGAL HARUS SIMETRIS ==== */
-#calendar-mini .fc-scrollgrid-section-body table {
-    table-layout: fixed !important;  /* fix lebar kolom */
-}
-
-#calendar-mini .fc-daygrid-day,
-#calendar-mini .fc-daygrid-day-frame {
-    border: 1px solid #e5e7eb !important; /* border seragam */
-}
-
-/* Hilangkan min-height lama */
-#calendar-mini .fc-daygrid-day-frame {
-    min-height: unset !important;
-}
-
-/* Tinggi standar setiap sel agar simetris */
-#calendar-mini .fc-daygrid-day-frame {
-    height: 48px;
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
-}
-
-/* Hover cell */
-#calendar-mini .fc-daygrid-day:hover {
-    background: #f0f9ff;
-}
-
-/* Number tanggal */
-#calendar-mini .fc-daygrid-day-number {
-    font-size: 0.8rem;
-    padding: 4px;
-    font-weight: 600;
-}
-/* Warna merah untuk kolom hari Minggu */
-#calendar-mini .fc-day-sun {
-    background-color: #ffe5e5 !important; /* merah muda soft */
-}
-
-/* Angka tanggal hari Minggu jadi merah */
-#calendar-mini .fc-day-sun .fc-daygrid-day-number {
-    color: #e11d48 !important; /* merah */
-    font-weight: 700;
-}
-
-/* Event */
-#calendar-mini .fc-event {
-    font-size: 0.7rem;
-    padding: 2px 4px;
-    margin: 2px 0;
-    border-radius: 4px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease;
-}
-
-#calendar-mini .fc-event:hover {
-    transform: scale(1.05);
-}
-
-/* Today highlight */
-#calendar-mini .fc-day-today {
-    background: #dbeafe !important;
-    border: 2px solid #3b82f6 !important;
-}
-
-/* Legend (jika ada) */
-.legend-item {
-    display: inline-flex;
-    align-items: center;
-    margin-right: 0.5rem;
-    font-size: 0.8rem;
-}
-
-.legend-color {
-    width: 12px;
-    height: 12px;
-    border-radius: 3px;
-    margin-right: 0.4rem;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-/* ==== RESPONSIVE ==== */
-@media (max-width: 640px) {
-
-    #calendar-mini {
-        font-size: 0.78rem;
-    }
-
-    #calendar-mini .fc-toolbar-title {
-        font-size: 0.9rem;
-    }
-
-    #calendar-mini .fc-daygrid-day-frame {
-        height: 40px;  /* versi compact di mobile */
-    }
-
-    #calendar-mini .fc-event {
-        font-size: 0.65rem;
-        padding: 2px 3px;
-    }
-    body {
-    padding-bottom: 80px;
-    }
-
-}
+        /* ==== RESPONSIVE ==== */
+        @media (max-width: 640px) {
+            body {
+                padding-bottom: 80px;
+            }
+            .calendar-day {
+                width: 28px;
+                height: 28px;
+                font-size: 0.7rem;
+            }
+        }
     </style>
 
     <script>
@@ -366,74 +260,85 @@
 
             </div>
 
-<!-- RIGHT: Calendar + Fitur Assessment -->
-<div class="md:col-span-1 space-y-6">
+            <!-- RIGHT: Calendar + Fitur Assessment -->
+            <div class="md:col-span-1 space-y-6">
 
-    <!-- Calendar -->
-    <section class="bg-white rounded-lg shadow p-4 w-full">
-        <div class="flex flex-wrap justify-between items-center mb-3 gap-2">
-            <h2 class="text-lg font-semibold flex items-center">
-                <i class="fas fa-calendar-alt text-blue-600 mr-2 text-xl"></i>
-                Kalender
-            </h2>
-        </div>
-
-        <div id="calendar-mini"></div>
-    </section>
-
-    <!-- Fitur Assessment -->
-    <section class="bg-white rounded-lg shadow p-4">
-        <div class="flex justify-between items-center mb-3">
-            <h2 class="text-lg font-semibold flex items-center">
-                <i class="fas fa-list-check text-blue-600 mr-2"></i>
-                Fitur Assessment
-            </h2>
-            <a href="{{ route('fitur.create') }}"
-               class="text-xs bg-green-600 text-white px-3 py-1.5 rounded hover:bg-green-700 transition duration-300 flex items-center">
-                <i class="fas fa-plus mr-1"></i>
-                Tambah Fitur
-            </a>
-        </div>
-
-        <div class="space-y-3 max-h-64 md:max-h-96 overflow-y-auto">
-            @forelse($fiturs as $fitur)
-                <div class="border border-gray-200 rounded-lg p-3 bg-gray-50 hover:bg-gray-100 transition duration-300">
-                    <div class="text-xs font-semibold text-gray-700 mb-1">
-                        NO ASSESSMENT: {{ $fitur->no_assessment }}
+                <!-- New Simple Calendar Design -->
+                <section class="bg-white rounded-lg shadow p-4 w-full">
+                    <h2 class="text-lg font-semibold mb-3 flex items-center">
+                        <i class="fas fa-calendar-alt text-blue-600 mr-2"></i>
+                        Kalender Global
+                    </h2>
+                    
+                    <div class="mb-4 flex justify-between items-center">
+                        <button onclick="prevMonth()" class="p-1 rounded-full hover:bg-gray-100 transition">
+                            <i class="fas fa-chevron-left text-gray-600"></i>
+                        </button>
+                        <span id="calendar-month-year" class="font-medium text-gray-800"></span>
+                        <button onclick="nextMonth()" class="p-1 rounded-full hover:bg-gray-100 transition">
+                            <i class="fas fa-chevron-right text-gray-600"></i>
+                        </button>
                     </div>
-                    <div class="text-sm font-medium text-gray-800 mb-2">
-                        {{ Str::limit($fitur->judul, 60) }}
+                    
+                    <div class="grid grid-cols-7 gap-1 mb-2 text-center text-xs text-gray-500 font-medium">
+                        <div>M</div><div>S</div><div>S</div><div>R</div><div>K</div><div>J</div><div>S</div>
                     </div>
-                    <div class="text-xs text-gray-600 space-y-1">
-                        <div>
-                            <span class="font-medium">TARGET UAT:</span>
-                            {{ $fitur->target_uat ? $fitur->target_uat->format('d-m-Y') : '-' }}
-                        </div>
-                        <div>
-                            <span class="font-medium">TARGET RILIS:</span>
-                            {{ $fitur->target_due_date ? $fitur->target_due_date->format('d-m-Y') : '-' }}
-                        </div>
+                    
+                    <div id="calendar-days" class="grid grid-cols-7 gap-1"></div>
+                </section>
+
+                <!-- Fitur Assessment -->
+                <section class="bg-white rounded-lg shadow p-4">
+                    <div class="flex justify-between items-center mb-3">
+                        <h2 class="text-lg font-semibold flex items-center">
+                            <i class="fas fa-list-check text-blue-600 mr-2"></i>
+                            Fitur Assessment
+                        </h2>
+                        <a href="{{ route('fitur.create') }}"
+                           class="text-xs bg-green-600 text-white px-3 py-1.5 rounded hover:bg-green-700 transition duration-300 flex items-center">
+                            <i class="fas fa-plus mr-1"></i>
+                            Tambah Fitur
+                        </a>
                     </div>
-                    @if($fitur->link)
-                        <div class="mt-2">
-                            <a href="{{ $fitur->link }}" target="_blank"
-                               class="inline-block px-3 py-1 bg-green-600 text-white text-xs font-medium rounded hover:bg-green-700 transition duration-300">
-                                LINK
-                            </a>
-                        </div>
-                    @endif
-                </div>
-            @empty
-                <div class="text-center text-gray-500 text-sm py-8">
-                    <i class="fas fa-inbox text-3xl mb-2"></i>
-                    <p>Belum ada data fitur</p>
-                </div>
-            @endforelse
-        </div>
-    </section>
 
-</div>
+                    <div class="space-y-3 max-h-64 md:max-h-96 overflow-y-auto">
+                        @forelse($fiturs as $fitur)
+                            <div class="border border-gray-200 rounded-lg p-3 bg-gray-50 hover:bg-gray-100 transition duration-300">
+                                <div class="text-xs font-semibold text-gray-700 mb-1">
+                                    NO ASSESSMENT: {{ $fitur->no_assessment }}
+                                </div>
+                                <div class="text-sm font-medium text-gray-800 mb-2">
+                                    {{ Str::limit($fitur->judul, 60) }}
+                                </div>
+                                <div class="text-xs text-gray-600 space-y-1">
+                                    <div>
+                                        <span class="font-medium">TARGET UAT:</span>
+                                        {{ $fitur->target_uat ? $fitur->target_uat->format('d-m-Y') : '-' }}
+                                    </div>
+                                    <div>
+                                        <span class="font-medium">TARGET RILIS:</span>
+                                        {{ $fitur->target_due_date ? $fitur->target_due_date->format('d-m-Y') : '-' }}
+                                    </div>
+                                </div>
+                                @if($fitur->link)
+                                    <div class="mt-2">
+                                        <a href="{{ $fitur->link }}" target="_blank"
+                                           class="inline-block px-3 py-1 bg-green-600 text-white text-xs font-medium rounded hover:bg-green-700 transition duration-300">
+                                            LINK
+                                        </a>
+                                    </div>
+                                @endif
+                            </div>
+                        @empty
+                            <div class="text-center text-gray-500 text-sm py-8">
+                                <i class="fas fa-inbox text-3xl mb-2"></i>
+                                <p>Belum ada data fitur</p>
+                            </div>
+                        @endforelse
+                    </div>
+                </section>
 
+            </div>
 
         </div>
     </div>
@@ -494,55 +399,117 @@
         </div>
     </div>
 
-    <!-- FullCalendar JS -->
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/id.js"></script>
-
     <script>
+        // Simple Calendar Implementation
+        let currentDate = new Date();
+        let currentMonth = currentDate.getMonth();
+        let currentYear = currentDate.getFullYear();
+        
+        // Events from backend (will be populated via inline script or ajax)
+        let calendarEvents = [];
+        
+        // Fetch events from backend
+        async function fetchCalendarEvents() {
+            try {
+                const response = await fetch('{{ route("calendar.events") }}');
+                calendarEvents = await response.json();
+                renderCalendar();
+            } catch (error) {
+                console.error('Error fetching calendar events:', error);
+                renderCalendar();
+            }
+        }
+        
+        function getMonthName(month) {
+            const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 
+                           'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+            return months[month];
+        }
+        
+        function getDaysInMonth(month, year) {
+            return new Date(year, month + 1, 0).getDate();
+        }
+        
+        function getFirstDayOfMonth(month, year) {
+            // Get day of week (0 = Sunday, 1 = Monday, etc.)
+            // Convert to Monday-first (0 = Monday, 6 = Sunday)
+            let day = new Date(year, month, 1).getDay();
+            return day === 0 ? 6 : day - 1;
+        }
+        
+        function hasEventOnDate(year, month, day) {
+            const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            return calendarEvents.some(event => event.start && event.start.startsWith(dateStr));
+        }
+        
+        function renderCalendar() {
+            const monthYearEl = document.getElementById('calendar-month-year');
+            const daysEl = document.getElementById('calendar-days');
+            
+            monthYearEl.textContent = `${getMonthName(currentMonth)} ${currentYear}`;
+            
+            const daysInMonth = getDaysInMonth(currentMonth, currentYear);
+            const firstDay = getFirstDayOfMonth(currentMonth, currentYear);
+            
+            // Get days from previous month
+            const prevMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+            const prevYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+            const daysInPrevMonth = getDaysInMonth(prevMonth, prevYear);
+            
+            let html = '';
+            
+            // Previous month days
+            for (let i = firstDay - 1; i >= 0; i--) {
+                const day = daysInPrevMonth - i;
+                html += `<div class="calendar-day text-gray-300">${day}</div>`;
+            }
+            
+            // Current month days
+            const today = new Date();
+            for (let day = 1; day <= daysInMonth; day++) {
+                const isToday = day === today.getDate() && 
+                               currentMonth === today.getMonth() && 
+                               currentYear === today.getFullYear();
+                const hasEvent = hasEventOnDate(currentYear, currentMonth, day);
+                
+                let classes = 'calendar-day';
+                if (isToday) classes += ' today';
+                if (hasEvent) classes += ' has-event';
+                
+                html += `<div class="${classes}">${day}</div>`;
+            }
+            
+            // Next month days to fill the grid
+            const totalCells = Math.ceil((firstDay + daysInMonth) / 7) * 7;
+            const nextMonthDays = totalCells - (firstDay + daysInMonth);
+            for (let day = 1; day <= nextMonthDays; day++) {
+                html += `<div class="calendar-day text-gray-300">${day}</div>`;
+            }
+            
+            daysEl.innerHTML = html;
+        }
+        
+        function prevMonth() {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            renderCalendar();
+        }
+        
+        function nextMonth() {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            renderCalendar();
+        }
+        
+        // Initialize calendar on page load
         document.addEventListener('DOMContentLoaded', function() {
-            var calendarEl = document.getElementById('calendar-mini');
-
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                locale: 'id',
-                headerToolbar: {
-                    left: 'prev,next',
-                    center: 'title',
-                    right: ''
-                },
-                height: 'auto',
-                contentHeight: 'auto',
-                events: '{{ route("calendar.events") }}',
-                eventClick: function(info) {
-                    if (info.event.url) {
-                        window.location.href = info.event.url;
-                    }
-                },
-                eventDidMount: function(info) {
-                    // Tambahkan tooltip
-                    info.el.title = info.event.title;
-
-                    // Highlight deadline yang mendekati (kurang dari 3 hari)
-                    const eventDate = new Date(info.event.start);
-                    const today = new Date();
-                    const diffTime = eventDate - today;
-                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-                    if (diffDays <= 3 && diffDays >= 0) {
-                        info.el.style.backgroundColor = '#ef4444';
-                        info.el.style.borderColor = '#ef4444';
-                        info.el.style.color = 'white';
-                    }
-                },
-                dayMaxEvents: 2, // Limit events per day untuk tampilan mini
-                eventTimeFormat: {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    meridiem: false
-                }
-            });
-
-            calendar.render();
+            fetchCalendarEvents();
         });
     </script>
 
