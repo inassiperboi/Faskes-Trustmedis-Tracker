@@ -65,4 +65,5 @@ class FaskesController extends Controller
 
         return view('user.detailfaskes', compact('faskes', 'fiturs'));
     }
+
 }

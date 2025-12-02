@@ -46,10 +46,10 @@ Route::get('/', function () {
 
 // ==================== PROTECTED ROUTES ====================
 Route::middleware(['auth'])->group(function () {
-    
+
     // ==================== ROUTE ADMIN ====================
     Route::resource('users', UserController::class);
-    
+
     Route::resource('admin/faskes', AdminFaskesController::class, [
         'names' => 'admin.faskes'
     ]);
@@ -121,11 +121,11 @@ Route::middleware(['auth'])->group(function () {
             'subsection' => \App\Models\SubSection::findOrFail($id),
             default => abort(404, 'Tipe file tidak valid')
         };
-        
+
         if (!$model->file_path || !Storage::disk('public')->exists($model->file_path)) {
             return back()->with('error', 'File tidak ditemukan.');
         }
-        
+
         return Storage::disk('public')->download($model->file_path, $model->file_original_name);
     })->name('download.file');
 
@@ -136,11 +136,11 @@ Route::middleware(['auth'])->group(function () {
             'subsection' => \App\Models\SubSection::findOrFail($id),
             default => abort(404, 'Tipe file tidak valid')
         };
-        
+
         if (!$model->file_path || !Storage::disk('public')->exists($model->file_path)) {
             abort(404, 'File tidak ditemukan');
         }
-        
+
         return response()->file(storage_path('app/public/' . $model->file_path));
     })->name('preview.file');
 
