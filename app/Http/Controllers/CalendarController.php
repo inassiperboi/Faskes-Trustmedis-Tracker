@@ -58,7 +58,23 @@ class CalendarController extends Controller
                 ];
             });
 
+        // Ambil dari SubSection
+        $subSectionDeadlines = SubSection::whereNotNull('deadline')
+            ->with(['submaster.master.faskes'])
+            ->get()
+            ->map(function ($subSection) {
+                return [
+                    'id' => 'subsection_' . $subSection->id,
+                    'title' => '⚪ ' . $subSection->nama,
+                    'start' => $subSection->deadline,
+                    'color' => '#8b5cf6',
+                    'type' => 'subsection',
+                    'faskes' => $subSection->submaster->master->faskes->nama,
+                    'url' => route('faskes.show', $subSection->submaster->master->faskes_id)
+                ];
+            });
+
         // Gabungkan semua events
-        return $masterDeadlines->merge($subMasterDeadlines);
+        return $masterDeadlines->merge($subMasterDeadlines)->merge($subSectionDeadlines);
     }
 }
