@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Faskes;
+use App\Models\Fitur;
 use App\Models\Master;
 use App\Models\SubMaster;
 use App\Models\SubSection;
@@ -77,7 +78,43 @@ class CalendarController extends Controller
             })
             ->values();
 
+        // Ambil dari Fitur Assessment - Target UAT
+        $fiturUatDeadlines = Fitur::whereNotNull('target_uat')
+            ->get()
+            ->map(function ($fitur) {
+                return [
+                    'id' => 'fitur_uat_' . $fitur->id,
+                    'title' => '🧪 UAT - ' . $fitur->judul,
+                    'start' => $fitur->target_uat,
+                    'color' => '#0ea5e9',
+                    'type' => 'fitur_uat',
+                    'faskes' => 'Fitur Assessment ' . $fitur->no_assessment,
+                    'url' => $fitur->link ?? route('fitur.index')
+                ];
+            })
+            ->values();
+
+        // Ambil dari Fitur Assessment - Target Rilis
+        $fiturRilisDeadlines = Fitur::whereNotNull('target_due_date')
+            ->get()
+            ->map(function ($fitur) {
+                return [
+                    'id' => 'fitur_rilis_' . $fitur->id,
+                    'title' => '🚀 Rilis - ' . $fitur->judul,
+                    'start' => $fitur->target_due_date,
+                    'color' => '#f59e0b',
+                    'type' => 'fitur_rilis',
+                    'faskes' => 'Fitur Assessment ' . $fitur->no_assessment,
+                    'url' => $fitur->link ?? route('fitur.index')
+                ];
+            })
+            ->values();
+
         // Gabungkan semua events
-        return $masterDeadlines->concat($subMasterDeadlines)->concat($subSectionDeadlines);
+        return $masterDeadlines
+            ->concat($subMasterDeadlines)
+            ->concat($subSectionDeadlines)
+            ->concat($fiturUatDeadlines)
+            ->concat($fiturRilisDeadlines);
     }
 }

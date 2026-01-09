@@ -138,6 +138,18 @@
                                 <span>Sub-Master</span>
                             </div>
                             <div class="legend-item">
+                                <div class="legend-color" style="background-color: #8b5cf6;"></div>
+                                <span>Sub-Section</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #0ea5e9;"></div>
+                                <span>Fitur Target UAT</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #f59e0b;"></div>
+                                <span>Fitur Target Rilis</span>
+                            </div>
+                            <div class="legend-item">
                                 <div class="legend-color" style="background-color: #ef4444;"></div>
                                 <span>Deadline Mendekati (< 3 hari)</span>
                             </div>
