@@ -40,7 +40,8 @@ class CalendarController extends Controller
                     'faskes' => $master->faskes->nama,
                     'url' => route('faskes.show', $master->faskes_id)
                 ];
-            });
+            })
+            ->values();
 
         // Ambil dari SubMaster
         $subMasterDeadlines = SubMaster::whereNotNull('deadline')
@@ -56,7 +57,8 @@ class CalendarController extends Controller
                     'faskes' => $subMaster->master->faskes->nama,
                     'url' => route('faskes.show', $subMaster->master->faskes_id)
                 ];
-            });
+            })
+            ->values();
 
         // Ambil dari SubSection
         $subSectionDeadlines = SubSection::whereNotNull('deadline')
@@ -72,9 +74,10 @@ class CalendarController extends Controller
                     'faskes' => $subSection->submaster->master->faskes->nama,
                     'url' => route('faskes.show', $subSection->submaster->master->faskes_id)
                 ];
-            });
+            })
+            ->values();
 
         // Gabungkan semua events
-        return $masterDeadlines->merge($subMasterDeadlines)->merge($subSectionDeadlines);
+        return $masterDeadlines->concat($subMasterDeadlines)->concat($subSectionDeadlines);
     }
 }
